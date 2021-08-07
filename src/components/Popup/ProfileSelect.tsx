@@ -2,7 +2,7 @@
 import { Select } from '@material-ui/core';
 import { useState } from 'react';
 
-const ProfileSelect = () => {
+const ProfileSelect: React.FC = () => {
 	const [profile, setProfile] = useState(10);
 	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 		setProfile(event.target.value as number);

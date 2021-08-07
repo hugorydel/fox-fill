@@ -25,6 +25,12 @@ const useStyles = makeStyles({
 		height: '260px',
 		width: '266px',
 	},
+	content: {
+		padding: '18px 40px 0px 40px',
+		height: '500px',
+		overflow: 'overlay',
+		//Future -- customize scrollbar
+	},
 });
 
 const Popup = () => {
@@ -36,8 +42,10 @@ const Popup = () => {
 				<img src={mainLogo} alt='Fox Fill Logo' className={classes.mainLogo} />
 				<img src={bigLogo} alt='Large Fox Fill Logo' className={classes.bigLogo} />
 			</header>
-			<ProfileSelect />
-			<Accordions />
+			<div className={classes.content}>
+				<ProfileSelect />
+				<Accordions />
+			</div>
 		</Fragment>
 	);
 };
