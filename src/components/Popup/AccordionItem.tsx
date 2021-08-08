@@ -26,9 +26,7 @@ const AccordionItem: React.FC<AccordionsItemProps> = ({
 			<AccordionSummary>
 				<Typography>{title}</Typography>
 			</AccordionSummary>
-			<AccordionDetails>
-				<Typography>{children}</Typography>
-			</AccordionDetails>
+			<AccordionDetails>{children}</AccordionDetails>
 		</Accordion>
 	);
 };

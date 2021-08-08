@@ -1,11 +1,16 @@
 import { makeStyles } from '@material-ui/core/styles';
 import bigLogo from '../assets/images/big_logo.svg';
 import mainLogo from '../assets/images/logo.png';
-import { Fragment } from 'react';
 import ProfileSelect from '../components/Popup/ProfileSelect';
 import Accordions from '../components/Popup/Accordions';
+import { Button } from '@material-ui/core';
+import { ChangeEvent } from 'react';
 
 const useStyles = makeStyles({
+	popupRoot: {
+		width: '600px',
+		height: '600px',
+	},
 	headers: {
 		background: '#171717',
 		height: '80px',
@@ -36,8 +41,12 @@ const useStyles = makeStyles({
 const Popup = () => {
 	const classes = useStyles();
 
+	const goToSettings = (_event: ChangeEvent<{}>) => {
+		window.open(`${window.location.href.split('#')[0]}#/profiles`);
+	};
+
 	return (
-		<Fragment>
+		<div className={classes.popupRoot}>
 			<header className={classes.headers}>
 				<img src={mainLogo} alt='Fox Fill Logo' className={classes.mainLogo} />
 				<img src={bigLogo} alt='Large Fox Fill Logo' className={classes.bigLogo} />
@@ -45,8 +54,11 @@ const Popup = () => {
 			<div className={classes.content}>
 				<ProfileSelect />
 				<Accordions />
+				<Button onClick={goToSettings} variant='contained' color='secondary'>
+					Go To Settings
+				</Button>
 			</div>
-		</Fragment>
+		</div>
 	);
 };
 
