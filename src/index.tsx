@@ -6,15 +6,18 @@ import Profiles from './pages/Profiles';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
 import { HashRouter, Route } from 'react-router-dom';
+import SettingsProvider from './providers/settings/SettingsProvider';
 
 ReactDOM.render(
 	<React.StrictMode>
-		<ThemeProvider theme={theme}>
-			<HashRouter>
-				<Route path='/popup' exact component={Popup} />
-				<Route path='/profiles' exact component={Profiles} />
-			</HashRouter>
-		</ThemeProvider>
+		<SettingsProvider>
+			<ThemeProvider theme={theme}>
+				<HashRouter>
+					<Route path='/popup' exact component={Popup} />
+					<Route path='/profiles' exact component={Profiles} />
+				</HashRouter>
+			</ThemeProvider>
+		</SettingsProvider>
 	</React.StrictMode>,
 	document.getElementById('root')
 );
