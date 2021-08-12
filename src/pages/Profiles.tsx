@@ -1,10 +1,14 @@
 import { makeStyles } from '@material-ui/core/styles';
-import bigLogo from '../assets/images/big_logo.svg';
-import mainLogo from '../assets/images/logo.png';
-import { Fragment } from 'react';
+import Navbar from '../components/Profiles/Navbar';
 
 const useStyles = makeStyles({
 	profilesRoot: {
+		width: '100vw',
+		height: '100vh',
+	},
+	profilesContainer: {
+		maxWidth: '70vw',
+		margin: 'auto',
 		width: '100vw',
 		height: '100vh',
 	},
@@ -13,7 +17,11 @@ const useStyles = makeStyles({
 const Profiles = () => {
 	const classes = useStyles();
 
-	return <div className={classes.profilesRoot}>Hey There</div>;
+	return (
+		<div className={classes.profilesRoot}>
+			<Navbar />
+		</div>
+	);
 };
 
 export default Profiles;

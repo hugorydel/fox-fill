@@ -34,7 +34,10 @@ const useStyles = makeStyles({
 		padding: '18px 40px 0px 40px',
 		height: '500px',
 		overflow: 'overlay',
-		//Future -- customize scrollbar
+		'&::-webkit-scrollbar': { width: '10px' } /* width */,
+		'&::-webkit-scrollbar-track': { background: '#222' } /* Track */,
+		'&::-webkit-scrollbar-thumb': { background: '#444' } /* Handle */,
+		'&::-webkit-scrollbar-thumb:hover': { background: '#383838' } /* Handle on hover */,
 	},
 });
 
