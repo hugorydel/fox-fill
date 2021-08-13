@@ -5,9 +5,9 @@ interface ContentContainerProps {}
 const useStyles = makeStyles(() => ({
 	content: {
 		color: '#fff',
-		display: 'flex',
-		alignSelf: 'center',
-		padding: '100px 100px 10px 100px',
+		padding: '100px 100px 0 100px',
+		display: 'grid',
+		placeItems: 'center',
 	},
 }));
 

@@ -1,4 +1,36 @@
-export type Profile = {};
+export type Profile = {
+	id: string;
+	shipping: {
+		profileTitle: string;
+		firstName: string;
+		lastName: string;
+		cardNumber: string;
+		expirationDate: string;
+		cvv: string;
+		addressOne: string;
+		addressTwo: string;
+		country: string;
+		state: string;
+		phoneNumber: string;
+		email: string;
+		discord: string;
+		twitter: string;
+		city: string;
+		zipCode: string;
+	};
+	billing?: {
+		firstName: string;
+		lastName: string;
+		addressOne: string;
+		addressTwo: string;
+		country: string;
+		state: string;
+		city: string;
+		zipCode: string;
+		phoneNumber: string;
+		email: string;
+	};
+};
 
 export type ContextProps = {
 	popup: {
@@ -63,67 +95,3 @@ export type ActionProps = {
 		newValue: any;
 	};
 };
-
-// export type dataStructure = {
-// 	profile: Array<Profile>,
-// 	popup: {
-// 		shopify: {
-// 			enabled: boolean,
-// 			navigateThroughStepsEnabled: boolean,
-// 			navigateThroughStepsDelay: number,
-// 			requests: boolean,
-// 			autocart: boolean,
-// 			shopifyAutocop: boolean,
-// 			hybrid: boolean,
-// 			productMenu: boolean,
-// 		},
-// 		stripe: {
-// 			enabled: boolean,
-// 			refreshPageUntilClickEnabled: boolean,
-// 			refreshPageUntilClickURL: string,
-// 			ACO: boolean,
-// 		},
-// 		supreme: {
-// 			enabled: boolean,
-// 			autocop: boolean,
-// 			processPayment: boolean,
-// 			productMenu: boolean,
-// 		},
-// 		walmart: {
-// 			ACO: boolean,
-// 			ATC: boolean,
-// 		},
-// 		target: {
-// 			ACO: boolean,
-// 			ATC: boolean,
-// 			allowPickup: boolean,
-// 		},
-// 		AIOScripts: {
-// 			adidasYeezySupply: boolean,
-// 			offWhite: boolean,
-// 			footsites: boolean,
-// 		},
-// 		bots: {
-// 			bandarsBounties: boolean,
-// 			shrey: boolean,
-// 			velo: boolean,
-// 			discordOAuth: boolean,
-// 		},
-// 	},
-// settings: {
-// 	discordWebhook: string,
-// 	supremeMonitor: {
-// 		keywords: string,
-// 		color: string,
-// 		size: number,
-// 	},
-// 	shopifyMonitor: {
-// 		keywords: string,
-// 		color: string,
-// 		size: number,
-// 	},
-// 	promoDiscountCode: string,
-// 	linkAppender: string,
-// 	blackListedWebsites: Array<string>,
-// },
-// };

@@ -8,6 +8,7 @@ import { TextField, Switch, FormControlLabel } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ChangeEvent, useState } from 'react';
 import useSettings from '../../providers/settings';
+import formatObjectKey from '../../utils/formatObjectKey';
 
 const useStyles = makeStyles({
 	accordionContainer: {
@@ -29,9 +30,6 @@ const Accordions: React.FC = () => {
 		(panel: string) => (_event: ChangeEvent<{}>, newExpanded: boolean) => {
 			setExpanded(newExpanded ? panel : '');
 		};
-
-	const capitalizeFirstLetter = (text: string): string =>
-		text.charAt(0).toUpperCase() + text.slice(1).replace(/([a-z])([A-Z])/g, '$1 $2');
 
 	return (
 		<div className={classes.accordionContainer}>
@@ -86,7 +84,7 @@ const Accordions: React.FC = () => {
 						expanded={expanded === categoryKey}
 						onChange={changeOpenTab(categoryKey)}>
 						<AccordionSummary>
-							<Typography>{capitalizeFirstLetter(categoryKey)}</Typography>
+							<Typography>{formatObjectKey(categoryKey)}</Typography>
 						</AccordionSummary>
 						<AccordionDetails className={classes.innerElements}>
 							{Object.entries(options).map(([option]) => {
@@ -102,14 +100,14 @@ const Accordions: React.FC = () => {
 													onChange={e => changeData('popup', optionKey, e.target.checked)}
 												/>
 											}
-											label={capitalizeFirstLetter(optionKey)}
+											label={formatObjectKey(optionKey)}
 										/>
 									);
 								if (typeof optionValue === 'string' || typeof optionValue === 'number')
 									return (
 										<TextField
 											key={optionKey}
-											label={capitalizeFirstLetter(optionKey)}
+											label={formatObjectKey(optionKey)}
 											value={optionValue}
 											type={typeof optionValue}
 											onChange={e => changeData('popup', optionKey, e.target.value)}
