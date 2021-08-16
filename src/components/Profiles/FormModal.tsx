@@ -1,60 +1,78 @@
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
-import { Typography, TextField, Switch, FormControlLabel } from '@material-ui/core';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
+import {
+	Typography,
+	FormControlLabel,
+	Switch,
+	Dialog,
+	Button,
+	Grid,
+	DialogTitle,
+	DialogContent,
+	DialogActions,
+} from '@material-ui/core';
 import useSettings from '../../providers/settings';
 import { Fragment, useState } from 'react';
 import { v4 as uuid } from 'uuid';
+import { Form, Formik, FormikProps } from 'formik';
 import { Profile } from '../../providers/settings/types';
+import FormItem from './FormItem';
 import formatObjectKey from '../../utils/formatObjectKey';
 
-const shipping = {
-	profileTitle: '',
-	firstName: '',
-	lastName: '',
-	cardNumber: '',
-	expirationDate: '',
-	cvv: '',
-	addressOne: '',
-	addressTwo: '',
-	country: '',
-	state: '',
-	phoneNumber: '',
-	email: '',
-	discord: '',
-	twitter: '',
-	city: '',
-	zipCode: '',
+const shippingSchema = {
+	shippingProfileTitle: { placeholder: 'Enter Profile Tile' },
+	shippingFirstName: { placeholder: 'Enter First Name' },
+	shippingLastName: { placeholder: 'Enter Last Name' },
+	shippingCardNumber: {
+		mask: '9999 9999 9999 9999',
+		autoComplete: 'cc-number',
+		maxLength: '19',
+		placeholder: '0000 0000 0000 0000',
+	},
+	shippingExpirationDate: {
+		maxLength: '5',
+		placeholder: 'MM/YY',
+		mask: '99/99',
+		autoComplete: 'cc-number',
+	},
+	shippingCVV: {
+		maxLength: '3',
+		placeholder: 'CVV',
+		mask: '999',
+		autoComplete: 'cc-exp',
+	},
+	shippingAddressOne: { placeholder: 'Enter Address 1' },
+	shippingAddressTwo: { placeholder: 'Enter Address 2' },
+	shippingCountry: { placeholder: 'Enter Country' },
+	shippingState: { placeholder: 'Enter State/Province' },
+	shippingPhoneNumber: {
+		maxLength: '20',
+		placeholder: 'Enter Phone Number',
+		type: 'tel',
+	},
+	shippingEmail: { placeholder: 'Enter Email', type: 'email' },
+	shippingDiscord: { placeholder: 'Enter Discord' },
+	shippingTwitter: { placeholder: 'Enter Twitter' },
+	shippingCity: { placeholder: 'Enter City' },
+	shippingZipCode: { placeholder: 'Enter Zip Code' },
 };
 
-const billing = {
-	firstName: '',
-	lastName: '',
-	addressOne: '',
-	addressTwo: '',
-	country: '',
-	state: '',
-	city: '',
-	zipCode: '',
-	phoneNumber: '',
-	email: '',
+const billingSchema = {
+	billingFirstName: { placeholder: 'Enter First Name' },
+	billingLastName: { placeholder: 'Enter Last Name' },
+	billingAddressOne: { placeholder: 'Enter Address 1' },
+	billingAddressTwo: { placeholder: 'Enter Address 2' },
+	billingCountry: { placeholder: 'Enter Country' },
+	billingState: { placeholder: 'Enter State' },
+	billingCity: { placeholder: 'Enter City' },
+	billingZipCode: { placeholder: 'Enter Zip Code' },
+	billingPhoneNumber: { placeholder: 'Enter Phone Number', type: 'tel' },
+	billingEmail: { placeholder: 'Enter Email', type: 'email' },
 };
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
 	createStyles({
 		modalRoot: {
-			display: 'grid',
-			placeItems: 'center',
-		},
-		paper: {
-			display: 'grid',
-			placeItems: 'center',
-			width: 400,
-			backgroundColor: theme.palette.background.paper,
-			border: '2px solid #000',
-			boxShadow: theme.shadows[5],
-			padding: theme.spacing(2, 4, 3),
 			overflow: 'overlay',
-			height: '80vh',
 			'&::-webkit-scrollbar': { width: '10px' } /* width */,
 			'&::-webkit-scrollbar-track': { background: '#222' } /* Track */,
 			'&::-webkit-scrollbar-thumb': { background: '#444' } /* Handle */,
@@ -70,129 +88,136 @@ interface FormModalProps {
 }
 
 const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
-	const { profiles } = useSettings();
+	const { profiles, changeData } = useSettings();
 	const { currentProfile } = profiles;
-	const initialUserObject =
-		type === 'edit' && currentProfile ? currentProfile : { id: uuid(), shipping };
-	const initialBillingAddress =
-		type === 'edit' && currentProfile ? 'billing' in currentProfile : true;
-
 	const classes = useStyles();
 
-	const [profile, setProfile] = useState<Profile>(initialUserObject);
-	const [sameBillingAddress, setSameBillingAddress] = useState(initialBillingAddress);
-	const handleClose = () => setModalOpen(false);
+	const objectKeysToStrings = (object: object) =>
+		Object.keys(object).reduce((acc: any, key: any) => {
+			acc[key] = '';
+			return acc;
+		}, {});
+
+	const initialValues =
+		type === 'edit' && currentProfile
+			? currentProfile
+			: { id: uuid(), ...objectKeysToStrings(shippingSchema) };
+	const sameAddress =
+		type === 'edit' && currentProfile ? !('billing' in currentProfile) : true;
+
+	const [sameBillingAddress, setSameBillingAddress] = useState(sameAddress);
+
+	const validate = (values: Profile) => {
+		const errors: any = {};
+
+		const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+		const phoneRegex =
+			/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
+		const cvvRegex = /^[0-9]{3,4}$/;
+
+		for (const [key, value] of Object.entries(values)) {
+			if (!value) errors[key as keyof Profile] = 'Required Field';
+		}
+
+		if (!emailRegex.test(values.shippingEmail))
+			errors.shippingEmail = 'Invalid email address';
+
+		if (!phoneRegex.test(values.shippingPhoneNumber))
+			errors.shippingPhoneNumber = 'Invalid Phone Number';
+		if (!cvvRegex.test(values.shippingCVV)) errors.shippingCVV = 'Invalid CVV';
+
+		if (values.billingEmail && !emailRegex.test(values.billingEmail))
+			errors.billingEmail = 'Invalid email address';
+		if (values.billingPhoneNumber && !phoneRegex.test(values.billingPhoneNumber))
+			errors.billingPhoneNumber = 'Invalid Phone Number';
+
+		return errors;
+	};
 
 	return (
-		<Modal
-			className={classes.modalRoot}
+		<Dialog
+			maxWidth='md'
 			open={open}
-			onClose={handleClose}
+			onClose={() => setModalOpen(false)}
 			aria-labelledby='simple-modal-title'
 			aria-describedby='simple-modal-description'>
-			<div className={classes.paper}>
-				<Typography variant='h4'>{type} Profile</Typography>
-				<Typography variant='h5'>Shipping</Typography>
-				{Object.keys({
-					profileTitle: '',
-					firstName: '',
-					lastName: '',
-					cardNumber: '',
-					expirationDate: '',
-					cvv: '',
-					addressOne: '',
-					addressTwo: '',
-					country: '',
-					state: '',
-					phoneNumber: '',
-					email: '',
-					discord: '',
-					twitter: '',
-					city: '',
-					zipCode: '',
-				}).map((shippingItemKey, index) => {
-					return (
-						<TextField
-							variant='outlined'
-							key={index}
-							label={formatObjectKey(shippingItemKey)}
-							value={profile.shipping[shippingItemKey as keyof typeof shipping]}
-							type='string'
-							onChange={e =>
-								setProfile(currentProfile => {
-									return {
-										...currentProfile,
-										shipping: {
-											...currentProfile.shipping,
-											[shippingItemKey]: e.target.value,
-										},
-									};
-								})
-							}
-						/>
-					);
-				})}
-				<FormControlLabel
-					control={
-						<Switch
-							checked={sameBillingAddress}
-							onChange={e => {
-								if (!e.target.checked) {
-									setProfile(currentProfile => {
-										return { ...currentProfile, billing };
-									});
-								} else {
-									setProfile(profile => {
-										delete profile.billing;
-										return profile;
-									});
-								}
-								setSameBillingAddress(billing => !billing);
-							}}
-						/>
-					}
-					label='Same As Billing'
-				/>
-				{profile.billing && (
-					<Fragment>
-						<Typography variant='h5'>Billing</Typography>
-						{Object.keys({
-							firstName: '',
-							lastName: '',
-							addressOne: '',
-							addressTwo: '',
-							country: '',
-							state: '',
-							city: '',
-							zipCode: '',
-							phoneNumber: '',
-							email: '',
-						}).map((billingItemKey, index) => {
-							return (
-								<TextField
-									variant='outlined'
-									key={index}
-									label={formatObjectKey(billingItemKey)}
-									value={profile.billing![billingItemKey as keyof typeof billing]}
-									type='string'
-									onChange={e =>
-										setProfile(currentProfile => {
-											return {
-												...currentProfile,
-												billing: {
-													...currentProfile.billing!,
-													[billingItemKey]: e.target.value,
-												},
-											};
-										})
+			<DialogTitle>
+				<Typography variant='h4'>{formatObjectKey(type)} Profile</Typography>
+			</DialogTitle>
+			<Formik
+				initialValues={initialValues}
+				validate={validate}
+				onSubmit={values => {
+					console.log(values);
+					changeData('profiles', 'createdProfiles', values);
+				}}>
+				{({ setValues, handleSubmit }: FormikProps<Profile>) => (
+					<>
+						<DialogContent className={classes.modalRoot}>
+							<Form>
+								<Typography variant='h5'>Shipping</Typography>
+								<Grid container>
+									{Object.entries(shippingSchema).map(([key, settings]) => (
+										<FormItem key={key} itemName={key} settings={settings} />
+									))}
+								</Grid>
+								<FormControlLabel
+									control={
+										<Switch
+											checked={sameBillingAddress}
+											onChange={e => {
+												if (!e.target.checked) {
+													setValues(currentProfile => {
+														return {
+															...currentProfile,
+															...objectKeysToStrings(billingSchema),
+														};
+													});
+													setSameBillingAddress(false);
+												} else {
+													setValues(profile => {
+														for (const key in billingSchema)
+															delete profile[key as keyof typeof billingSchema];
+														return profile;
+													});
+													setSameBillingAddress(true);
+												}
+											}}
+										/>
 									}
+									label='Same As Billing'
 								/>
-							);
-						})}
-					</Fragment>
+								{!sameBillingAddress && (
+									<Fragment>
+										<Typography variant='h5'>Billing</Typography>
+										<Grid container>
+											{Object.entries(billingSchema).map(([key, settings]) => (
+												<FormItem key={key} itemName={key} settings={settings} />
+											))}
+										</Grid>
+									</Fragment>
+								)}
+							</Form>
+						</DialogContent>
+						<DialogActions>
+							<Button onClick={() => setModalOpen(false)} color='primary'>
+								Cancel
+							</Button>
+							<Button
+								onClick={() => {
+									handleSubmit();
+									setModalOpen(false);
+								}}
+								color='primary'
+								variant='contained'>
+								Create Profile
+							</Button>
+						</DialogActions>
+					</>
 				)}
-			</div>
-		</Modal>
+			</Formik>
+		</Dialog>
 	);
 };
+
 export default FormModal;

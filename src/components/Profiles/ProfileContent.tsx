@@ -48,6 +48,7 @@ const ProfileContent: React.FC = () => {
 				</Button>
 				{createdProfiles.map(profile => (
 					<div
+						key={profile.id}
 						className={`${classes.profileItem} ${
 							profile.id === currentProfile?.id ?? classes.currentProfileItem
 						}`}>

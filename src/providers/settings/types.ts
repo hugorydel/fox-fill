@@ -1,35 +1,31 @@
 export type Profile = {
 	id: string;
-	shipping: {
-		profileTitle: string;
-		firstName: string;
-		lastName: string;
-		cardNumber: string;
-		expirationDate: string;
-		cvv: string;
-		addressOne: string;
-		addressTwo: string;
-		country: string;
-		state: string;
-		phoneNumber: string;
-		email: string;
-		discord: string;
-		twitter: string;
-		city: string;
-		zipCode: string;
-	};
-	billing?: {
-		firstName: string;
-		lastName: string;
-		addressOne: string;
-		addressTwo: string;
-		country: string;
-		state: string;
-		city: string;
-		zipCode: string;
-		phoneNumber: string;
-		email: string;
-	};
+	shippingProfileTitle: string;
+	shippingFirstName: string;
+	shippingLastName: string;
+	shippingCardNumber: string;
+	shippingExpirationDate: string;
+	shippingCVV: string;
+	shippingAddressOne: string;
+	shippingAddressTwo: string;
+	shippingCountry: string;
+	shippingState: string;
+	shippingPhoneNumber: string;
+	shippingEmail: string;
+	shippingDiscord: string;
+	shippingTwitter: string;
+	shippingCity: string;
+	shippingZipCode: string;
+	billingFirstName?: string;
+	billingLastName?: string;
+	billingAddressOne?: string;
+	billingAddressTwo?: string;
+	billingCountry?: string;
+	billingState?: string;
+	billingCity?: string;
+	billingZipCode?: string;
+	billingPhoneNumber?: string;
+	billingEmail?: string;
 };
 
 export type ContextProps = {
@@ -81,8 +77,11 @@ export type ContextProps = {
 	};
 	changeData: (
 		parentKey: keyof ContextProps,
-		childKey: keyof ContextProps['popup'],
-		newValue: string | boolean | number
+		childKey:
+			| keyof ContextProps['popup']
+			| keyof ContextProps['profiles']
+			| keyof ContextProps['settings'],
+		newValue: any
 	) => void;
 	// loadStorageData: () => Promise<void>;
 };
@@ -91,7 +90,10 @@ export type ActionProps = {
 	type: 'SET_DATA';
 	payload: {
 		parentKey?: keyof ContextProps;
-		childKey?: keyof ContextProps['popup'];
+		childKey?:
+			| keyof ContextProps['popup']
+			| keyof ContextProps['profiles']
+			| keyof ContextProps['settings'];
 		newValue: any;
 	};
 };

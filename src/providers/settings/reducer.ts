@@ -8,7 +8,14 @@ const reducer = (state: ContextProps, action: ActionProps) => {
 			if (parentKey && childKey) {
 				const modifiedState = {
 					...state,
-					[parentKey]: { ...state[parentKey], [childKey]: newValue },
+					[parentKey]: {
+						...state[parentKey],
+						//@ts-expect-error
+						[childKey]: Array.isArray(state[parentKey][childKey])
+							? //@ts-expect-error
+							  [newValue, ...state[parentKey][childKey]]
+							: newValue,
+					},
 				};
 				// state.setStorageData(parentKey, modifiedState);
 				return modifiedState;

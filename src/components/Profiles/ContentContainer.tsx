@@ -1,4 +1,4 @@
-import { Box, makeStyles, Typography } from '@material-ui/core';
+import { Box, makeStyles } from '@material-ui/core';
 
 interface ContentContainerProps {}
 
@@ -15,7 +15,7 @@ const ContentContainer: React.FC<ContentContainerProps> = ({ children }) => {
 	const classes = useStyles();
 	return (
 		<Box className={classes.content} p={3}>
-			<Typography>{children}</Typography>
+			{children}
 		</Box>
 	);
 };
