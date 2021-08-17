@@ -15,14 +15,15 @@ import { Fragment, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { Form, Formik, FormikProps } from 'formik';
 import { Profile } from '../../providers/settings/types';
-import FormItem from './FormItem';
+import FormModalInput from './FormModalInput';
 import formatObjectKey from '../../utils/formatObjectKey';
 
 const shippingSchema = {
-	shippingProfileTitle: { placeholder: 'Enter Profile Tile' },
+	shippingProfileTitle: { sm: '12', placeholder: 'Enter Profile Tile' },
 	shippingFirstName: { placeholder: 'Enter First Name' },
 	shippingLastName: { placeholder: 'Enter Last Name' },
 	shippingCardNumber: {
+		sm: '12',
 		mask: '9999 9999 9999 9999',
 		autoComplete: 'cc-number',
 		maxLength: '19',
@@ -35,9 +36,11 @@ const shippingSchema = {
 		autoComplete: 'cc-number',
 	},
 	shippingCVV: {
+		name: 'CVV',
 		maxLength: '3',
 		placeholder: 'CVV',
 		mask: '999',
+		// This causes an automatic touched error
 		autoComplete: 'cc-exp',
 	},
 	shippingAddressOne: { placeholder: 'Enter Address 1' },
@@ -89,7 +92,7 @@ interface FormModalProps {
 
 const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 	const { profiles, changeData } = useSettings();
-	const { currentProfile } = profiles;
+	const { currentProfile, createdProfiles } = profiles;
 	const classes = useStyles();
 
 	const objectKeysToStrings = (object: object) =>
@@ -102,6 +105,7 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 		type === 'edit' && currentProfile
 			? currentProfile
 			: { id: uuid(), ...objectKeysToStrings(shippingSchema) };
+
 	const sameAddress =
 		type === 'edit' && currentProfile ? !('billing' in currentProfile) : true;
 
@@ -135,30 +139,38 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 	};
 
 	return (
-		<Dialog
-			maxWidth='md'
-			open={open}
-			onClose={() => setModalOpen(false)}
-			aria-labelledby='simple-modal-title'
-			aria-describedby='simple-modal-description'>
-			<DialogTitle>
-				<Typography variant='h4'>{formatObjectKey(type)} Profile</Typography>
-			</DialogTitle>
-			<Formik
-				initialValues={initialValues}
-				validate={validate}
-				onSubmit={values => {
-					console.log(values);
-					changeData('profiles', 'createdProfiles', values);
-				}}>
-				{({ setValues, handleSubmit }: FormikProps<Profile>) => (
-					<>
+		<Formik
+			initialValues={initialValues}
+			validate={validate}
+			onSubmit={values =>
+				changeData('profiles', 'createdProfiles', [...createdProfiles, values])
+			}>
+			{({
+				submitForm,
+				setValues,
+				resetForm,
+				isValid,
+				isSubmitting,
+			}: FormikProps<Profile>) => (
+				<>
+					<Dialog
+						maxWidth='md'
+						open={open}
+						onClose={() => {
+							resetForm();
+							setModalOpen(false);
+						}}
+						aria-labelledby='simple-modal-title'
+						aria-describedby='simple-modal-description'>
+						<DialogTitle>
+							<Typography variant='h4'>{formatObjectKey(type)} Profile</Typography>
+						</DialogTitle>
 						<DialogContent className={classes.modalRoot}>
 							<Form>
 								<Typography variant='h5'>Shipping</Typography>
 								<Grid container>
 									{Object.entries(shippingSchema).map(([key, settings]) => (
-										<FormItem key={key} itemName={key} settings={settings} />
+										<FormModalInput key={key} itemName={key} settings={settings} />
 									))}
 								</Grid>
 								<FormControlLabel
@@ -192,7 +204,7 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 										<Typography variant='h5'>Billing</Typography>
 										<Grid container>
 											{Object.entries(billingSchema).map(([key, settings]) => (
-												<FormItem key={key} itemName={key} settings={settings} />
+												<FormModalInput key={key} itemName={key} settings={settings} />
 											))}
 										</Grid>
 									</Fragment>
@@ -204,19 +216,19 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 								Cancel
 							</Button>
 							<Button
-								onClick={() => {
-									handleSubmit();
-									setModalOpen(false);
+								onClick={async () => {
+									await submitForm();
+									if (isValid && !isSubmitting) setModalOpen(false);
 								}}
 								color='primary'
 								variant='contained'>
 								Create Profile
 							</Button>
 						</DialogActions>
-					</>
-				)}
-			</Formik>
-		</Dialog>
+					</Dialog>
+				</>
+			)}
+		</Formik>
 	);
 };
 

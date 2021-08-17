@@ -4,26 +4,26 @@ import { Fragment } from 'react';
 import formatObjectKey from '../../utils/formatObjectKey';
 import InputMask from 'react-input-mask';
 
-interface FormItemProps {
+interface FormModalInputProps {
 	itemName: string;
 	settings: any;
 }
 
-const FormItem: React.FC<FormItemProps> = ({ itemName, settings }) => {
+const FormModalInput: React.FC<FormModalInputProps> = ({ itemName, settings }) => {
 	return (
-		<Grid item xs={12} sm={6}>
-			<Typography variant='h6'>{formatObjectKey(itemName)}</Typography>
+		<Grid item xs={12} sm={settings.sm || 6}>
+			<Typography variant='h6'>{settings.name || formatObjectKey(itemName)}</Typography>
 			<FastField name={itemName}>
 				{({ field, form, meta }: FastFieldProps<any>) => (
 					<Fragment>
-						{console.log(meta.touched, meta.error)}
 						{'mask' in settings ? (
-							// To find out more about this component https://blog.logrocket.com/formatting-form-inputs-with-cleave-js-and-react/
 							<InputMask
 								mask={settings.mask}
 								{...field}
+								// Future -- remove both empty onBlur's and find out how you can fix the validate before *actually* touched" - It's related to Chrome's autoComplete but don't know how to fix it.
+								onBlur={() => {}}
 								onChange={e =>
-									form.setFieldValue(itemName, e.currentTarget.value.replace(/\D/g, ''))
+									form.setFieldValue(itemName, e.target.value.replace(/\D/g, ''))
 								}>
 								{(inputProps: any) => (
 									<TextField
@@ -64,6 +64,8 @@ const FormItem: React.FC<FormItemProps> = ({ itemName, settings }) => {
 								placeholder={settings.placeholder}
 								type={settings.type}
 								{...field}
+								onBlur={() => {}}
+								// onChange={() => {}}
 							/>
 						)}
 						{!!meta.touched && !!meta.error && <div>{meta.error}</div>}
@@ -74,4 +76,4 @@ const FormItem: React.FC<FormItemProps> = ({ itemName, settings }) => {
 	);
 };
 
-export default FormItem;
+export default FormModalInput;
