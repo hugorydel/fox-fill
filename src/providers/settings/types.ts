@@ -63,7 +63,7 @@ export type ContextProps = {
 		createdProfiles: Array<Profile>;
 		currentProfile: Profile | undefined;
 	};
-	settings: {
+	userSettings: {
 		discordWebhook: string;
 		supremeMonitorkeywords: string;
 		supremeMonitorcolor: string;
@@ -80,7 +80,7 @@ export type ContextProps = {
 		childKey:
 			| keyof ContextProps['popup']
 			| keyof ContextProps['profiles']
-			| keyof ContextProps['settings'],
+			| keyof ContextProps['userSettings'],
 		newValue: any
 	) => void;
 	// loadStorageData: () => Promise<void>;
@@ -93,7 +93,7 @@ export type ActionProps = {
 		childKey?:
 			| keyof ContextProps['popup']
 			| keyof ContextProps['profiles']
-			| keyof ContextProps['settings'];
+			| keyof ContextProps['userSettings'];
 		newValue: any;
 	};
 };

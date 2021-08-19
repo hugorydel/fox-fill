@@ -1,24 +1,34 @@
 // import { makeStyles } from '@material-ui/core/styles';
-import { Select } from '@material-ui/core';
-import { useState } from 'react';
+import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import useSettings from '../../providers/settings';
 
 const ProfileSelect: React.FC = () => {
-	const [profile, setProfile] = useState(10);
+	const { profiles, changeData } = useSettings();
+	const { createdProfiles, currentProfile } = profiles;
 	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-		setProfile(event.target.value as number);
+		changeData(
+			'profiles',
+			'currentProfile',
+			createdProfiles.filter(item => item.id === event.target.value)[0]
+		);
 	};
 
 	return (
-		<Select
-			native
-			labelId='select-profile-label'
-			id='select-profile'
-			value={profile}
-			onChange={handleChange}>
-			<option value={10}>Ten</option>
-			<option value={20}>Twenty</option>
-			<option value={30}>Thirty</option>
-		</Select>
+		<FormControl style={{ width: '200px' }}>
+			<InputLabel id='demo-customized-select-label'>Selected Profile</InputLabel>
+			<Select
+				labelId='select-profile-label'
+				id='select-profile'
+				value={currentProfile?.id || ''}
+				onChange={handleChange}>
+				<MenuItem value=''>None</MenuItem>
+				{createdProfiles.map(profile => (
+					<MenuItem key={profile.id} value={profile.id}>
+						{profile.shippingProfileTitle}
+					</MenuItem>
+				))}
+			</Select>
+		</FormControl>
 	);
 };
 

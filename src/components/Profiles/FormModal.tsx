@@ -16,7 +16,7 @@ import { v4 as uuid } from 'uuid';
 import { Form, Formik, FormikProps } from 'formik';
 import { Profile } from '../../providers/settings/types';
 import FormModalInput from './FormModalInput';
-import formatObjectKey from '../../utils/formatObjectKey';
+import objectKeysToStrings from '../../utils/objectKeysToStrings';
 
 const shippingSchema = {
 	shippingProfileTitle: { sm: '12', placeholder: 'Enter Profile Tile' },
@@ -36,7 +36,7 @@ const shippingSchema = {
 		autoComplete: 'cc-number',
 	},
 	shippingCVV: {
-		name: 'CVV',
+		title: 'CVV',
 		maxLength: '3',
 		placeholder: 'CVV',
 		mask: '999',
@@ -95,19 +95,13 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 	const { currentProfile, createdProfiles } = profiles;
 	const classes = useStyles();
 
-	const objectKeysToStrings = (object: object) =>
-		Object.keys(object).reduce((acc: any, key: any) => {
-			acc[key] = '';
-			return acc;
-		}, {});
+	const editType = type === 'edit' && currentProfile;
 
-	const initialValues =
-		type === 'edit' && currentProfile
-			? currentProfile
-			: { id: uuid(), ...objectKeysToStrings(shippingSchema) };
+	const initialValues = editType
+		? currentProfile
+		: { id: uuid(), ...objectKeysToStrings(shippingSchema) };
 
-	const sameAddress =
-		type === 'edit' && currentProfile ? !('billing' in currentProfile) : true;
+	const sameAddress = editType ? !('billing' in currentProfile!) : true;
 
 	const [sameBillingAddress, setSameBillingAddress] = useState(sameAddress);
 
@@ -142,9 +136,17 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 		<Formik
 			initialValues={initialValues}
 			validate={validate}
-			onSubmit={values =>
-				changeData('profiles', 'createdProfiles', [...createdProfiles, values])
-			}>
+			onSubmit={values => {
+				editType
+					? changeData(
+							'profiles',
+							'createdProfiles',
+							createdProfiles.map(profile =>
+								profile.id === values.id ? values : profile
+							)
+					  )
+					: changeData('profiles', 'createdProfiles', [...createdProfiles, values]);
+			}}>
 			{({
 				submitForm,
 				setValues,
@@ -156,14 +158,11 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 					<Dialog
 						maxWidth='md'
 						open={open}
-						onClose={() => {
-							resetForm();
-							setModalOpen(false);
-						}}
+						onClose={() => setModalOpen(false)}
 						aria-labelledby='simple-modal-title'
 						aria-describedby='simple-modal-description'>
 						<DialogTitle>
-							<Typography variant='h4'>{formatObjectKey(type)} Profile</Typography>
+							<Typography variant='h4'>{editType ? 'Edit' : 'Create'} Profile</Typography>
 						</DialogTitle>
 						<DialogContent className={classes.modalRoot}>
 							<Form>
@@ -212,7 +211,12 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 							</Form>
 						</DialogContent>
 						<DialogActions>
-							<Button onClick={() => setModalOpen(false)} color='primary'>
+							<Button
+								onClick={() => {
+									resetForm();
+									setModalOpen(false);
+								}}
+								color='primary'>
 								Cancel
 							</Button>
 							<Button
@@ -222,7 +226,7 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 								}}
 								color='primary'
 								variant='contained'>
-								Create Profile
+								{editType ? 'Edit' : 'Create'} Profile
 							</Button>
 						</DialogActions>
 					</Dialog>

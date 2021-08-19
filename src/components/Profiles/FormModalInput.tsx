@@ -12,7 +12,7 @@ interface FormModalInputProps {
 const FormModalInput: React.FC<FormModalInputProps> = ({ itemName, settings }) => {
 	return (
 		<Grid item xs={12} sm={settings.sm || 6}>
-			<Typography variant='h6'>{settings.name || formatObjectKey(itemName)}</Typography>
+			<Typography variant='h6'>{settings.title || formatObjectKey(itemName)}</Typography>
 			<FastField name={itemName}>
 				{({ field, form, meta }: FastFieldProps<any>) => (
 					<Fragment>
@@ -21,7 +21,7 @@ const FormModalInput: React.FC<FormModalInputProps> = ({ itemName, settings }) =
 								mask={settings.mask}
 								{...field}
 								// Future -- remove both empty onBlur's and find out how you can fix the validate before *actually* touched" - It's related to Chrome's autoComplete but don't know how to fix it.
-								onBlur={() => {}}
+								// onBlur={() => {}}
 								onChange={e =>
 									form.setFieldValue(itemName, e.target.value.replace(/\D/g, ''))
 								}>
@@ -29,31 +29,15 @@ const FormModalInput: React.FC<FormModalInputProps> = ({ itemName, settings }) =
 									<TextField
 										fullWidth
 										variant='outlined'
-										autoComplete={settings.autoComplete || 'on'}
+										// autoComplete={settings.autoComplete || 'on'}
 										error={!!meta.touched && !!meta.error}
-										type={settings.type}
+										// type={settings.type}
 										placeholder={settings.placeholder}
 										{...inputProps}
 									/>
 								)}
 							</InputMask>
 						) : (
-							// 	<InputMask mask={settings.mask} id={itemName} {...field}>
-							// 	{(inputProps: any) => (
-							// 		<TextField
-							// 			size='medium'
-							// 			variant='outlined'
-							// 			fullWidth
-							// 			autoComplete={settings.autoComplete || 'on'}
-							// 			inputProps={{ maxLength: settings.maxLength || 50 }}
-							// 			error={!!meta.touched && !!meta.error}
-							// 			placeholder={settings.placeholder}
-							// 			type={settings.type || 'text'}
-							// 			{...inputProps}
-							// 		/>
-							// 	)}
-							// </InputMask>
-
 							<TextField
 								size='medium'
 								fullWidth
@@ -64,8 +48,7 @@ const FormModalInput: React.FC<FormModalInputProps> = ({ itemName, settings }) =
 								placeholder={settings.placeholder}
 								type={settings.type}
 								{...field}
-								onBlur={() => {}}
-								// onChange={() => {}}
+								// onBlur={() => {}}
 							/>
 						)}
 						{!!meta.touched && !!meta.error && <div>{meta.error}</div>}

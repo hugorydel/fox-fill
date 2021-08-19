@@ -14,6 +14,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 		color: '#FF993B',
 		width: '100vw',
 		height: '100vh',
+		overflow: 'overlay',
+		'&::-webkit-scrollbar': { width: '10px' } /* width */,
+		'&::-webkit-scrollbar-track': { background: '#222' } /* Track */,
+		'&::-webkit-scrollbar-thumb': { background: '#444' } /* Handle */,
+		'&::-webkit-scrollbar-thumb:hover': { background: '#383838' } /* Handle on hover */,
 	},
 	mainLogo: { height: '48px', width: '48px' },
 	navigation: {
@@ -30,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 		gap: '40px',
 	},
 	content: {
+		height: 'calc(100% - 66px)',
 		color: '#fff',
 		padding: '70px 100px 10px 100px',
 	},

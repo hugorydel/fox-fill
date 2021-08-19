@@ -1,5 +1,6 @@
 const formatObjectKey = (text: string): string => {
 	const textArray = text.match(/[A-Z][a-z]+/g) || [text];
+	console.log(textArray);
 	const filteredTextArray = textArray.filter(
 		string => !(string === 'shopping' || string === 'billing')
 	);

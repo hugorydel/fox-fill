@@ -70,7 +70,7 @@ const SettingsProvider: React.FC = ({ children }) => {
 			],
 			currentProfile: undefined,
 		},
-		settings: {
+		userSettings: {
 			discordWebhook: '',
 			supremeMonitorkeywords: '',
 			supremeMonitorcolor: '',
