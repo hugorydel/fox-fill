@@ -3,11 +3,11 @@ import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import useSettings from '../../providers/settings';
 
 const ProfileSelect: React.FC = () => {
-	const { profiles, changeData } = useSettings();
-	const { createdProfiles, currentProfile } = profiles;
+	const { profilesPage, changeData } = useSettings();
+	const { createdProfiles, currentProfile } = profilesPage;
 	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
 		changeData(
-			'profiles',
+			'profilesPage',
 			'currentProfile',
 			createdProfiles.filter(item => item.id === event.target.value)[0]
 		);

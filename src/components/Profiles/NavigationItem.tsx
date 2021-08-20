@@ -1,8 +1,14 @@
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
-	navigationItem: { display: 'flex', flexDirection: 'row', gap: '7px', padding: '20px' },
-	currentNavigationItem: { borderBottom: '2px solid #666' },
+	navigationItem: {
+		display: 'flex',
+		flexDirection: 'row',
+		gap: '7px',
+		padding: '20px',
+		cursor: 'pointer',
+	},
+	currentNavigationItem: { borderBottom: `2px solid ${theme.palette.primary.main}` },
 }));
 
 interface NavigationItemProps {

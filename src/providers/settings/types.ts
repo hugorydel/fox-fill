@@ -29,7 +29,7 @@ export type Profile = {
 };
 
 export type ContextProps = {
-	popup: {
+	popupPage: {
 		shopifyEnabled: boolean;
 		shopifyNavigateThroughStepsEnabled: boolean;
 		shopifyNavigateThroughStepsDelay: number;
@@ -59,11 +59,11 @@ export type ContextProps = {
 		botsVelo: boolean;
 		botsDiscordOAuth: boolean;
 	};
-	profiles: {
+	profilesPage: {
 		createdProfiles: Array<Profile>;
 		currentProfile: Profile | undefined;
 	};
-	userSettings: {
+	settingsPage: {
 		discordWebhook: string;
 		supremeMonitorkeywords: string;
 		supremeMonitorcolor: string;
@@ -75,12 +75,18 @@ export type ContextProps = {
 		linkAppender: string;
 		blackListedWebsites: Array<string>;
 	};
+	user: {
+		username: string;
+		email: string;
+		memberSince: string;
+		activationKey: string;
+	};
 	changeData: (
 		parentKey: keyof ContextProps,
 		childKey:
-			| keyof ContextProps['popup']
-			| keyof ContextProps['profiles']
-			| keyof ContextProps['userSettings'],
+			| keyof ContextProps['popupPage']
+			| keyof ContextProps['profilesPage']
+			| keyof ContextProps['settingsPage'],
 		newValue: any
 	) => void;
 	// loadStorageData: () => Promise<void>;
@@ -91,9 +97,9 @@ export type ActionProps = {
 	payload: {
 		parentKey?: keyof ContextProps;
 		childKey?:
-			| keyof ContextProps['popup']
-			| keyof ContextProps['profiles']
-			| keyof ContextProps['userSettings'];
+			| keyof ContextProps['popupPage']
+			| keyof ContextProps['profilesPage']
+			| keyof ContextProps['settingsPage'];
 		newValue: any;
 	};
 };

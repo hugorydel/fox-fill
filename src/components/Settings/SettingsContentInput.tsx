@@ -1,4 +1,12 @@
-import { Grid, Typography, TextField, GridSize, makeStyles } from '@material-ui/core';
+import {
+	Grid,
+	Typography,
+	TextField,
+	GridSize,
+	makeStyles,
+	createStyles,
+	Theme,
+} from '@material-ui/core';
 import useSettings from '../../providers/settings';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -7,45 +15,63 @@ interface SettingsContentInputProps {
 	settings: any;
 	itemName: string;
 }
-const useStyles = makeStyles({
-	settingsButton: {
-		width: `100%`,
-		height: '100%',
-	},
-});
+
+const useStyles = makeStyles((theme: Theme) =>
+	createStyles({
+		headings: {
+			// color: theme.palette.primary.main,
+			paddingTop: theme.spacing(2.7),
+			paddingBottom: theme.spacing(1),
+			fontWeight: 600,
+		},
+		labels: {
+			paddingTop: theme.spacing(1),
+			paddingBottom: theme.spacing(1),
+			fontWeight: 400,
+		},
+	})
+);
 
 const SettingsContentInput: React.FC<SettingsContentInputProps> = ({
 	settings,
 	itemName,
 }) => {
-	const { userSettings, changeData } = useSettings();
+	const { settingsPage, changeData } = useSettings();
 	const theme = useTheme();
 
 	const matchesSmallView = useMediaQuery(theme.breakpoints.up('sm'));
 	const classes = useStyles();
 
 	return 'heading' in settings ? (
-		<Grid style={{ fontWeight: 'bold', padding: '20px 0 10px 0' }} item xs={12} sm={12}>
-			<Typography variant='h5'>{settings.title}</Typography>
+		<Grid style={{ fontWeight: 'bold' }} item xs={12} sm={12}>
+			<Typography className={classes.headings} variant='h5'>
+				{settings.title}
+			</Typography>
 		</Grid>
 	) : (
-		<Grid container xs={12} sm={settings.containerSize || 12}>
-			<Grid style={{ padding: '10px 0 10px 0' }} item xs={12} sm={12}>
-				<Typography variant='h6'>{settings.title}</Typography>
-			</Grid>
+		<Grid
+			direction='row'
+			item
+			container
+			xs={12}
+			sm={settings.containerSize || 12}
+			spacing={settings.containerSize === 12 || !settings.containerSize ? 0 : 1}
+			alignItems='flex-end'>
 			<Grid item xs={12} sm={settings.textFieldSize || 12}>
+				<Typography className={classes.labels} variant='h6'>
+					{settings.title}
+				</Typography>
 				<TextField
 					fullWidth
 					autoComplete='on'
 					inputProps={{ maxLength: settings.maxLength || 50 }}
 					variant='outlined'
 					placeholder={settings.placeholder}
-					type={settings.type}
-					value={userSettings[itemName as keyof typeof userSettings]}
+					value={settingsPage[itemName as keyof typeof settingsPage]}
 					onChange={e =>
 						changeData(
-							'userSettings',
-							itemName as keyof typeof userSettings,
+							'settingsPage',
+							itemName as keyof typeof settingsPage,
 							e.target.value
 						)
 					}
@@ -55,7 +81,7 @@ const SettingsContentInput: React.FC<SettingsContentInputProps> = ({
 				<Grid
 					style={{ paddingLeft: matchesSmallView ? '10px' : '0' }}
 					item
-					xs={4}
+					xs={5}
 					sm={((12 - parseInt(settings.textFieldSize)) as GridSize) || 6}>
 					{settings.button}
 				</Grid>

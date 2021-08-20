@@ -1,7 +1,6 @@
 import { Grid, TextField, Typography } from '@material-ui/core';
 import { FastField, FastFieldProps } from 'formik';
 import { Fragment } from 'react';
-import formatObjectKey from '../../utils/formatObjectKey';
 import InputMask from 'react-input-mask';
 
 interface FormModalInputProps {
@@ -12,7 +11,11 @@ interface FormModalInputProps {
 const FormModalInput: React.FC<FormModalInputProps> = ({ itemName, settings }) => {
 	return (
 		<Grid item xs={12} sm={settings.sm || 6}>
-			<Typography variant='h6'>{settings.title || formatObjectKey(itemName)}</Typography>
+			<Typography
+				variant='h6'
+				style={{ fontWeight: 400, paddingTop: 8, paddingBottom: 8 }}>
+				{settings.title}
+			</Typography>
 			<FastField name={itemName}>
 				{({ field, form, meta }: FastFieldProps<any>) => (
 					<Fragment>
@@ -20,8 +23,6 @@ const FormModalInput: React.FC<FormModalInputProps> = ({ itemName, settings }) =
 							<InputMask
 								mask={settings.mask}
 								{...field}
-								// Future -- remove both empty onBlur's and find out how you can fix the validate before *actually* touched" - It's related to Chrome's autoComplete but don't know how to fix it.
-								// onBlur={() => {}}
 								onChange={e =>
 									form.setFieldValue(itemName, e.target.value.replace(/\D/g, ''))
 								}>
@@ -29,9 +30,7 @@ const FormModalInput: React.FC<FormModalInputProps> = ({ itemName, settings }) =
 									<TextField
 										fullWidth
 										variant='outlined'
-										// autoComplete={settings.autoComplete || 'on'}
 										error={!!meta.touched && !!meta.error}
-										// type={settings.type}
 										placeholder={settings.placeholder}
 										{...inputProps}
 									/>
@@ -48,10 +47,11 @@ const FormModalInput: React.FC<FormModalInputProps> = ({ itemName, settings }) =
 								placeholder={settings.placeholder}
 								type={settings.type}
 								{...field}
-								// onBlur={() => {}}
 							/>
 						)}
-						{!!meta.touched && !!meta.error && <div>{meta.error}</div>}
+						{!!meta.touched && !!meta.error && (
+							<div style={{ color: '#F44336' }}>{meta.error}</div>
+						)}
 					</Fragment>
 				)}
 			</FastField>

@@ -1,6 +1,7 @@
-import { Grid, Button, Paper, ButtonGroup, makeStyles } from '@material-ui/core';
-import { Fragment } from 'react';
+import { Grid, Button, ButtonGroup, makeStyles } from '@material-ui/core';
 import SettingsContentInput from './SettingsContentInput';
+import BlacklistedWebsites from './BlacklistedWebsites';
+import UserInfoDisplay from './UserInfoDisplay';
 
 const useStyles = makeStyles({});
 
@@ -8,13 +9,13 @@ const settingsSchema = {
 	notifications: { title: 'Notifications', heading: true },
 	discordWebhook: {
 		title: 'Discord Webhook',
-		textFieldSize: 9,
+		textFieldSize: 10,
 		placeholder: 'Enter discord webhook',
 		button: (
 			<Button
 				style={{
 					width: `100%`,
-					height: '100%',
+					height: '54px',
 				}}
 				variant='contained'
 				color='primary'>
@@ -60,14 +61,14 @@ const settingsSchema = {
 	},
 	appender: { title: 'Link Appender', heading: true },
 	linkAppender: {
-		textFieldSize: 9,
+		textFieldSize: 10,
 		title: 'URL',
 		placeholder: 'https://wrathbots.com',
 		button: (
 			<Button
 				style={{
 					width: `100%`,
-					height: '100%',
+					height: '54px',
 				}}
 				variant='contained'
 				color='primary'>
@@ -77,28 +78,28 @@ const settingsSchema = {
 	},
 	proxy: { title: 'Browser Proxy', heading: true },
 	browserProxy: {
-		textFieldSize: 8,
+		textFieldSize: 9,
 		title: 'Proxy',
 		placeholder: 'ip:port:username:password',
 		button: (
 			<ButtonGroup
 				style={{
 					width: `100%`,
-					height: '100%',
+					height: '54px',
 				}}
 				variant='contained'
 				color='primary'>
 				<Button
 					style={{
 						width: `100%`,
-						height: '100%',
+						height: '54px',
 					}}>
 					Test
 				</Button>
 				<Button
 					style={{
 						width: `100%`,
-						height: '100%',
+						height: '54px',
 					}}>
 					Apply
 				</Button>
@@ -106,25 +107,21 @@ const settingsSchema = {
 		),
 	},
 	blacklisted: { title: 'Blacklisted Websites', heading: true },
-	blacklistedWebsites: {
-		title: 'URL',
-		placeholder: 'Enter URL',
-	},
+	// Blacklisted Websites component is created below, without array mapping. Doing otherwise, with this design, would create additional complexity.
 };
 
 const SettingsContent: React.FC = () => {
 	const classes = useStyles();
 
 	return (
-		<Grid justifyContent='space-between' container spacing={1}>
+		<Grid justifyContent='space-between' container direction='row'>
 			<Grid xs={12} item>
-				<Paper style={{ height: '100px' }} elevation={3}>
-					User Details
-				</Paper>
+				<UserInfoDisplay />
 			</Grid>
 			{Object.entries(settingsSchema).map(([itemName, settings]: [string, any]) => (
 				<SettingsContentInput key={itemName} itemName={itemName} settings={settings} />
 			))}
+			<BlacklistedWebsites />
 		</Grid>
 	);
 };

@@ -10,19 +10,13 @@ const useStyles = makeStyles(() => ({
 		width: `100%`,
 		height: '100%',
 	},
-	// MuiButtonGroup: {
-	// 	root: {
-	// 		width: '100%',
-	// 		height: '100%',
-	// 	},
-	// },
 }));
 
 const ProfilesContent: React.FC = () => {
 	const classes = useStyles();
 
-	const { profiles } = useSettings();
-	const { createdProfiles } = profiles;
+	const { profilesPage } = useSettings();
+	const { createdProfiles } = profilesPage;
 
 	const [query, setQuery] = useState('');
 	const [modalOpen, setModalOpen] = useState(false);
@@ -39,7 +33,7 @@ const ProfilesContent: React.FC = () => {
 				<FormModal open={modalOpen} setModalOpen={setModalOpen} type={modalType} />
 			)}
 			<Grid container spacing={1}>
-				<Grid xs={12} sm={8} item>
+				<Grid xs={12} sm={9} item>
 					<TextField
 						fullWidth
 						variant='outlined'
@@ -49,7 +43,7 @@ const ProfilesContent: React.FC = () => {
 						onChange={e => setQuery(e.target.value)}
 					/>
 				</Grid>
-				<Grid xs={6} sm={4} item>
+				<Grid xs={6} sm={3} item>
 					<Button
 						className={classes.createProfileButton}
 						onClick={() => openFormOfType('create')}

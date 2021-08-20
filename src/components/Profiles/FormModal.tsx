@@ -16,13 +16,17 @@ import { v4 as uuid } from 'uuid';
 import { Form, Formik, FormikProps } from 'formik';
 import { Profile } from '../../providers/settings/types';
 import FormModalInput from './FormModalInput';
-import objectKeysToStrings from '../../utils/objectKeysToStrings';
 
 const shippingSchema = {
-	shippingProfileTitle: { sm: '12', placeholder: 'Enter Profile Tile' },
-	shippingFirstName: { placeholder: 'Enter First Name' },
-	shippingLastName: { placeholder: 'Enter Last Name' },
+	shippingProfileTitle: {
+		title: 'Profile Title',
+		sm: '12',
+		placeholder: 'Enter Profile Tile',
+	},
+	shippingFirstName: { title: 'First Name', placeholder: 'Enter First Name' },
+	shippingLastName: { title: 'Last Name', placeholder: 'Enter Last Name' },
 	shippingCardNumber: {
+		title: 'Card Number',
 		sm: '12',
 		mask: '9999 9999 9999 9999',
 		autoComplete: 'cc-number',
@@ -30,6 +34,7 @@ const shippingSchema = {
 		placeholder: '0000 0000 0000 0000',
 	},
 	shippingExpirationDate: {
+		title: 'Expiration Date',
 		maxLength: '5',
 		placeholder: 'MM/YY',
 		mask: '99/99',
@@ -43,33 +48,38 @@ const shippingSchema = {
 		// This causes an automatic touched error
 		autoComplete: 'cc-exp',
 	},
-	shippingAddressOne: { placeholder: 'Enter Address 1' },
-	shippingAddressTwo: { placeholder: 'Enter Address 2' },
-	shippingCountry: { placeholder: 'Enter Country' },
-	shippingState: { placeholder: 'Enter State/Province' },
+	shippingAddressOne: { title: 'Address One', placeholder: 'Enter Address 1' },
+	shippingAddressTwo: { title: 'Expiration Two', placeholder: 'Enter Address 2' },
+	shippingCountry: { title: 'Country', placeholder: 'Enter Country' },
+	shippingState: { title: 'State', placeholder: 'Enter State/Province' },
 	shippingPhoneNumber: {
+		title: 'Phone Number',
 		maxLength: '20',
 		placeholder: 'Enter Phone Number',
 		type: 'tel',
 	},
-	shippingEmail: { placeholder: 'Enter Email', type: 'email' },
-	shippingDiscord: { placeholder: 'Enter Discord' },
-	shippingTwitter: { placeholder: 'Enter Twitter' },
-	shippingCity: { placeholder: 'Enter City' },
-	shippingZipCode: { placeholder: 'Enter Zip Code' },
+	shippingEmail: { title: 'Email', placeholder: 'Enter Email', type: 'email' },
+	shippingDiscord: { title: 'Discord', placeholder: 'Enter Discord' },
+	shippingTwitter: { title: 'Twitter', placeholder: 'Enter Twitter' },
+	shippingCity: { title: 'City', placeholder: 'Enter City' },
+	shippingZipCode: { title: 'Zip Code', placeholder: 'Enter Zip Code' },
 };
 
 const billingSchema = {
-	billingFirstName: { placeholder: 'Enter First Name' },
-	billingLastName: { placeholder: 'Enter Last Name' },
-	billingAddressOne: { placeholder: 'Enter Address 1' },
-	billingAddressTwo: { placeholder: 'Enter Address 2' },
-	billingCountry: { placeholder: 'Enter Country' },
-	billingState: { placeholder: 'Enter State' },
-	billingCity: { placeholder: 'Enter City' },
-	billingZipCode: { placeholder: 'Enter Zip Code' },
-	billingPhoneNumber: { placeholder: 'Enter Phone Number', type: 'tel' },
-	billingEmail: { placeholder: 'Enter Email', type: 'email' },
+	billingFirstName: { title: 'First Name', placeholder: 'Enter First Name' },
+	billingLastName: { title: 'Last Name', placeholder: 'Enter Last Name' },
+	billingAddressOne: { title: 'Address One', placeholder: 'Enter Address 1' },
+	billingAddressTwo: { title: 'Address Two', placeholder: 'Enter Address 2' },
+	billingCountry: { title: 'Country', placeholder: 'Enter Country' },
+	billingState: { title: 'State', placeholder: 'Enter State' },
+	billingCity: { title: 'City', placeholder: 'Enter City' },
+	billingZipCode: { title: 'Zip Code', placeholder: 'Enter Zip Code' },
+	billingPhoneNumber: {
+		title: 'Phone Number',
+		placeholder: 'Enter Phone Number',
+		type: 'tel',
+	},
+	billingEmail: { title: 'Email', placeholder: 'Enter Email', type: 'email' },
 };
 
 const useStyles = makeStyles(() =>
@@ -91,11 +101,17 @@ interface FormModalProps {
 }
 
 const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
-	const { profiles, changeData } = useSettings();
-	const { currentProfile, createdProfiles } = profiles;
+	const { profilesPage, changeData } = useSettings();
+	const { currentProfile, createdProfiles } = profilesPage;
 	const classes = useStyles();
 
 	const editType = type === 'edit' && currentProfile;
+
+	const objectKeysToStrings = (object: object) =>
+		Object.keys(object).reduce((acc: any, key: any) => {
+			acc[key] = '';
+			return acc;
+		}, {});
 
 	const initialValues = editType
 		? currentProfile
@@ -133,41 +149,48 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 	};
 
 	return (
-		<Formik
-			initialValues={initialValues}
-			validate={validate}
-			onSubmit={values => {
-				editType
-					? changeData(
-							'profiles',
-							'createdProfiles',
-							createdProfiles.map(profile =>
-								profile.id === values.id ? values : profile
-							)
-					  )
-					: changeData('profiles', 'createdProfiles', [...createdProfiles, values]);
-			}}>
-			{({
-				submitForm,
-				setValues,
-				resetForm,
-				isValid,
-				isSubmitting,
-			}: FormikProps<Profile>) => (
-				<>
-					<Dialog
-						maxWidth='md'
-						open={open}
-						onClose={() => setModalOpen(false)}
-						aria-labelledby='simple-modal-title'
-						aria-describedby='simple-modal-description'>
+		<Dialog
+			PaperProps={{ style: { background: '#171717' } }}
+			maxWidth='md'
+			open={open}
+			onClose={() => setModalOpen(false)}
+			aria-labelledby='simple-modal-title'
+			aria-describedby='simple-modal-description'>
+			<Formik
+				initialValues={initialValues}
+				validate={validate}
+				onSubmit={values => {
+					editType
+						? changeData(
+								'profilesPage',
+								'createdProfiles',
+								createdProfiles.map(profile =>
+									profile.id === values.id ? values : profile
+								)
+						  )
+						: changeData('profilesPage', 'createdProfiles', [...createdProfiles, values]);
+				}}>
+				{({
+					submitForm,
+					setValues,
+					resetForm,
+					validateForm,
+					isSubmitting,
+				}: FormikProps<Profile>) => (
+					<>
 						<DialogTitle>
-							<Typography variant='h4'>{editType ? 'Edit' : 'Create'} Profile</Typography>
+							<Typography
+								style={{ color: '#FF993B', fontSize: 30, fontWeight: 600 }}
+								variant='h5'>
+								{editType ? 'Edit' : 'Create'} Profile
+							</Typography>
 						</DialogTitle>
 						<DialogContent className={classes.modalRoot}>
 							<Form>
-								<Typography variant='h5'>Shipping</Typography>
-								<Grid container>
+								<Typography style={{ paddingBottom: 8, fontWeight: 600 }} variant='h5'>
+									Shipping
+								</Typography>
+								<Grid container justifyContent='space-between' spacing={2}>
 									{Object.entries(shippingSchema).map(([key, settings]) => (
 										<FormModalInput key={key} itemName={key} settings={settings} />
 									))}
@@ -200,7 +223,11 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 								/>
 								{!sameBillingAddress && (
 									<Fragment>
-										<Typography variant='h5'>Billing</Typography>
+										<Typography
+											style={{ paddingBottom: 8, paddingTop: 16, fontWeight: 600 }}
+											variant='h5'>
+											Billing
+										</Typography>
 										<Grid container>
 											{Object.entries(billingSchema).map(([key, settings]) => (
 												<FormModalInput key={key} itemName={key} settings={settings} />
@@ -222,17 +249,19 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 							<Button
 								onClick={async () => {
 									await submitForm();
-									if (isValid && !isSubmitting) setModalOpen(false);
+									const errors = await validateForm();
+									if (Object.keys(errors).length === 0 && !isSubmitting)
+										setModalOpen(false);
 								}}
 								color='primary'
 								variant='contained'>
 								{editType ? 'Edit' : 'Create'} Profile
 							</Button>
 						</DialogActions>
-					</Dialog>
-				</>
-			)}
-		</Formik>
+					</>
+				)}
+			</Formik>
+		</Dialog>
 	);
 };
 

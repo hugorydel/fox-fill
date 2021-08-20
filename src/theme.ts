@@ -1,7 +1,5 @@
 import { createTheme } from '@material-ui/core';
 
-const buttonSpacing = '24px';
-
 const theme = createTheme({
 	typography: {
 		fontFamily: [
@@ -14,7 +12,7 @@ const theme = createTheme({
 			'"Segoe UI Emoji"',
 			'"Segoe UI Symbol"',
 		].join(','),
-		button: { fontWeight: 600, textTransform: 'none' },
+		button: { fontWeight: 500, textTransform: 'none' },
 	},
 	palette: {
 		type: 'dark',
@@ -24,6 +22,22 @@ const theme = createTheme({
 		divider: '#1b1b1b',
 		primary: { main: '#FF993B' },
 		secondary: { main: '#FF993B' },
+	},
+	overrides: {
+		MuiButton: {
+			root: {
+				fontSize: '13px',
+			},
+		},
+		MuiOutlinedInput: {
+			notchedOutline: { borderColor: '#303030' },
+			root: {
+				fontSize: 14,
+				fontWeight: 400,
+				background: '#171717',
+				// borderColor: '#202020',
+			},
+		},
 	},
 });
 

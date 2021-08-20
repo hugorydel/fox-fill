@@ -8,7 +8,6 @@ import { TextField, Switch, FormControlLabel } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ChangeEvent, useState } from 'react';
 import useSettings from '../../providers/settings';
-import formatObjectKey from '../../utils/formatObjectKey';
 
 const useStyles = makeStyles({
 	accordionContainer: {
@@ -22,7 +21,7 @@ const useStyles = makeStyles({
 });
 
 const Accordions: React.FC = () => {
-	const { popup, changeData } = useSettings();
+	const { popupPage, changeData } = useSettings();
 	const [expanded, setExpanded] = useState('');
 	const classes = useStyles();
 
@@ -34,47 +33,54 @@ const Accordions: React.FC = () => {
 	return (
 		<div className={classes.accordionContainer}>
 			{Object.entries({
-				shopify: {
-					shopifyEnabled: '',
-					shopifyNavigateThroughStepsEnabled: '',
-					shopifyNavigateThroughStepsDelay: '',
-					shopifyRequests: '',
-					shopifyAutocart: '',
-					shopifyShopifyAutocop: '',
-					shopifyHybrid: '',
-					shopifyProductMenu: '',
+				Shopify: {
+					shopifyEnabled: { title: 'Enabled' },
+					shopifyNavigateThroughStepsEnabled: { title: 'Navigate Through Steps' },
+					shopifyNavigateThroughStepsDelay: {
+						display: popupPage.shopifyNavigateThroughStepsEnabled,
+						title: 'Navigate Through Steps Delay',
+						type: 'number',
+					},
+					shopifyRequests: { title: 'Requests' },
+					shopifyAutocart: { title: 'Autocart' },
+					shopifyShopifyAutocop: { title: 'Autocop' },
+					shopifyHybrid: { title: 'Hybrid' },
+					shopifyProductMenu: { title: 'Product Menu' },
 				},
-				stripe: {
-					stripeEnabled: '',
-					stripeRefreshPageUntilClickEnabled: '',
-					stripeRefreshPageUntilClickURL: '',
-					stripeACO: '',
+				Stripe: {
+					stripeEnabled: { title: 'Enabled' },
+					stripeRefreshPageUntilClickEnabled: { title: 'Refresh Page Until Click' },
+					stripeRefreshPageUntilClickURL: {
+						display: popupPage.stripeRefreshPageUntilClickEnabled,
+						title: 'Refresh Page Until Click URL',
+					},
+					stripeACO: { title: 'ACO' },
 				},
-				supreme: {
-					supremeEnabled: '',
-					supremeAutocop: '',
-					supremeProcessPayment: '',
-					supremeProductMenu: '',
+				Supreme: {
+					supremeEnabled: { title: 'Enabled' },
+					supremeAutocop: { title: 'Autocop' },
+					supremeProcessPayment: { title: 'Process Payment' },
+					supremeProductMenu: { title: 'Product Menu' },
 				},
-				walmart: {
-					walmartACO: '',
-					walmartATC: '',
+				Walmart: {
+					walmartACO: { title: 'ACO' },
+					walmartATC: { title: 'ATC' },
 				},
-				target: {
-					targetACO: '',
-					targetATC: '',
-					targetAllowPickup: '',
+				Target: {
+					targetACO: { title: 'ACO' },
+					targetATC: { title: 'ATC' },
+					targetAllowPickup: { title: 'Allow Pickup' },
 				},
-				AIOScripts: {
-					AIOScriptsAdidasYeezySupply: '',
-					AIOScriptsOffWhite: '',
-					AIOScriptsFootsites: '',
+				Scripts: {
+					AIOScriptsAdidasYeezySupply: { title: 'Yeezy Supply' },
+					AIOScriptsOffWhite: { title: 'Off White' },
+					AIOScriptsFootsites: { title: 'Footsites' },
 				},
-				bots: {
-					botsBandarsBounties: '',
-					botsShrey: '',
-					botsVelo: '',
-					botsDiscordOAuth: '',
+				Bots: {
+					botsBandarsBounties: { title: `Bandar's Bounties` },
+					botsShrey: { title: 'Shrey' },
+					botsVelo: { title: 'Velo' },
+					botsDiscordOAuth: { title: 'Discord OAuth' },
 				},
 			}).map(([categoryKey, options]) => {
 				return (
@@ -84,12 +90,12 @@ const Accordions: React.FC = () => {
 						expanded={expanded === categoryKey}
 						onChange={changeOpenTab(categoryKey)}>
 						<AccordionSummary>
-							<Typography>{formatObjectKey(categoryKey)}</Typography>
+							<Typography>{categoryKey.split('_').join(' ')}</Typography>
 						</AccordionSummary>
 						<AccordionDetails className={classes.innerElements}>
-							{Object.entries(options).map(([option]) => {
-								const optionKey = option as keyof typeof popup;
-								const optionValue = popup[optionKey];
+							{Object.entries(options).map(([key, settings]) => {
+								const optionKey = key as keyof typeof popupPage;
+								const optionValue = popupPage[optionKey];
 								if (typeof optionValue === 'boolean')
 									return (
 										<FormControlLabel
@@ -97,22 +103,38 @@ const Accordions: React.FC = () => {
 												<Switch
 													key={optionKey}
 													checked={optionValue}
-													onChange={e => changeData('popup', optionKey, e.target.checked)}
+													onChange={e =>
+														changeData('popupPage', optionKey, e.target.checked)
+													}
 												/>
 											}
-											label={formatObjectKey(optionKey)}
+											label={settings.title}
 										/>
 									);
-								if (typeof optionValue === 'string' || typeof optionValue === 'number')
+								if (
+									(typeof optionValue === 'string' || typeof optionValue === 'number') &&
+									settings.display
+								) {
+									console.log(optionValue);
+									console.log(typeof optionValue);
 									return (
 										<TextField
 											key={optionKey}
-											label={formatObjectKey(optionKey)}
+											label={settings.title}
 											value={optionValue}
 											type={typeof optionValue}
-											onChange={e => changeData('popup', optionKey, e.target.value)}
+											onChange={e =>
+												changeData(
+													'popupPage',
+													optionKey,
+													typeof optionValue === 'number'
+														? parseInt(e.target.value) || 0
+														: e.target.value
+												)
+											}
 										/>
 									);
+								}
 								return undefined;
 							})}
 						</AccordionDetails>

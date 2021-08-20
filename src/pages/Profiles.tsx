@@ -10,7 +10,6 @@ import SettingsContent from '../components/Settings/SettingsContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
 	profileRoot: {
-		flexGrow: 1,
 		color: '#FF993B',
 		width: '100vw',
 		height: '100vh',

@@ -6,7 +6,7 @@ import { ContextProps } from './types';
 
 const SettingsProvider: React.FC = ({ children }) => {
 	const initialState: ContextProps = {
-		popup: {
+		popupPage: {
 			shopifyEnabled: false,
 			shopifyNavigateThroughStepsEnabled: false,
 			shopifyNavigateThroughStepsDelay: 0,
@@ -36,14 +36,14 @@ const SettingsProvider: React.FC = ({ children }) => {
 			botsVelo: false,
 			botsDiscordOAuth: false,
 		},
-		profiles: {
+		profilesPage: {
 			createdProfiles: [
 				{
 					id: '123',
 					shippingProfileTitle: 'Profile Title',
 					shippingFirstName: '',
 					shippingLastName: '',
-					shippingCardNumber: 'xxxx xxxx xxxx xxxx',
+					shippingCardNumber: '1111111111111111',
 					shippingExpirationDate: '12/31',
 					shippingCVV: '333',
 					shippingAddressOne: '',
@@ -70,7 +70,7 @@ const SettingsProvider: React.FC = ({ children }) => {
 			],
 			currentProfile: undefined,
 		},
-		userSettings: {
+		settingsPage: {
 			discordWebhook: '',
 			supremeMonitorkeywords: '',
 			supremeMonitorcolor: '',
@@ -81,6 +81,12 @@ const SettingsProvider: React.FC = ({ children }) => {
 			promoDiscountCode: '',
 			linkAppender: '',
 			blackListedWebsites: [],
+		},
+		user: {
+			username: '#1111',
+			email: 'test@gmail.com',
+			memberSince: '2000/01/01',
+			activationKey: 'DEFA-ULT-ACTI-KEYS',
 		},
 		changeData: (parentKey, childKey, newValue) => {
 			dispatch({ type: 'SET_DATA', payload: { parentKey, childKey, newValue } });
