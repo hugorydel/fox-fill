@@ -2,6 +2,9 @@ import { Button, TextField, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import bigLogo from '../assets/images/big_logo.svg';
 import InputMask from 'react-input-mask';
+import { useState } from 'react';
+import useSettings from '../providers/settings';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles(() => ({
 	loginRoot: {
@@ -28,7 +31,20 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Login: React.FC = () => {
+	const { changeData } = useSettings();
 	const classes = useStyles();
+	const history = useHistory();
+
+	const [activationKey, setActivationKey] = useState('');
+	const [keyError, setKeyError] = useState(false);
+
+	const saveActivationKey = () => {
+		const unformattedActivationKey = activationKey.replace(/[_-]/g, '');
+		console.log(unformattedActivationKey.length);
+		if (unformattedActivationKey.length !== 16) return setKeyError(true);
+		changeData('user', 'activationKey', unformattedActivationKey);
+		history.push('/popup');
+	};
 
 	return (
 		<div className={classes.loginRoot}>
@@ -36,19 +52,27 @@ const Login: React.FC = () => {
 			<Typography variant='h3' style={{ color: '#fff', marginBottom: '70px' }}>
 				Fox <strong>Fill</strong>
 			</Typography>
-			<InputMask mask='****-****-****-****'>
+			<InputMask
+				mask='****-****-****-****'
+				onChange={e => setActivationKey(e.target.value)}>
 				{(inputProps: any) => (
 					<TextField
 						variant='outlined'
+						error={keyError}
+						helperText={
+							keyError ? (
+								<Typography color='error'>Key must be 16 characters</Typography>
+							) : (
+								''
+							)
+						}
 						inputProps={{
 							style: {
 								width: '400px',
 								minWidth: '200px',
-								fontSize: '28px',
+								fontSize: '26px',
 								fontWeight: 300,
 								textAlign: 'center',
-								'&::-webkit-input-placeholder': { textAlign: 'center' },
-								'&:-moz-placeholder': { textAlign: 'center' },
 							},
 						}}
 						placeholder={'XXXX-XXXX-XXXX-XXXX'}
@@ -57,7 +81,8 @@ const Login: React.FC = () => {
 				)}
 			</InputMask>
 			<Button
-				style={{ marginTop: '30px' }}
+				onClick={saveActivationKey}
+				style={{ marginTop: '30px', width: 110, height: 45 }}
 				variant='contained'
 				color='primary'
 				size='large'>

@@ -1,5 +1,4 @@
-// import { makeStyles } from '@material-ui/core/styles';
-import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { FormControl, MenuItem, Select } from '@material-ui/core';
 import useSettings from '../../providers/settings';
 
 const ProfileSelect: React.FC = () => {
@@ -14,14 +13,15 @@ const ProfileSelect: React.FC = () => {
 	};
 
 	return (
-		<FormControl style={{ width: '200px' }}>
-			<InputLabel id='demo-customized-select-label'>Selected Profile</InputLabel>
+		<FormControl style={{ width: '200px', margin: 0 }}>
 			<Select
+				inputProps={{ 'aria-label': 'Without label' }}
 				labelId='select-profile-label'
+				variant='outlined'
 				id='select-profile'
-				value={currentProfile?.id || ''}
+				value={currentProfile?.id || 'Select Profile'}
 				onChange={handleChange}>
-				<MenuItem value=''>None</MenuItem>
+				<MenuItem value='Select Profile'>Choose Profile</MenuItem>
 				{createdProfiles.map(profile => (
 					<MenuItem key={profile.id} value={profile.id}>
 						{profile.shippingProfileTitle}
