@@ -5,7 +5,6 @@ import walmartLogo from '../../assets/images/walmart-logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	AppBar,
-	Box,
 	FormControlLabel,
 	Grid,
 	Paper,
@@ -17,11 +16,21 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import React, { ChangeEvent, useState } from 'react';
 import useSettings from '../../providers/settings';
+import { ContextProps } from '../../providers/settings/types';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const useStyles = makeStyles({
 	tabsContainer: {
 		padding: '20px 0 20px 0',
+	},
+	scrollableSettings: {
+		height: '350px',
+		overflow: 'overlay',
+		overflowX: 'hidden',
+		'&::-webkit-scrollbar': { width: '10px' } /* width */,
+		'&::-webkit-scrollbar-track': { background: '#222' } /* Track */,
+		'&::-webkit-scrollbar-thumb': { background: '#444' } /* Handle */,
+		'&::-webkit-scrollbar-thumb:hover': { background: '#383838' } /* Handle on hover */,
 	},
 	innerElements: {
 		display: 'flex',
@@ -66,6 +75,7 @@ const PopupTabs: React.FC = () => {
 			stripeRefreshPageUntilClickURL: {
 				display: popupPage.stripeRefreshPageUntilClickEnabled,
 				title: 'Refresh Page Until Click URL',
+				type: 'string',
 			},
 			stripeACO: { title: 'ACO' },
 		},
@@ -103,8 +113,9 @@ const PopupTabs: React.FC = () => {
 
 	return (
 		<div className={classes.tabsContainer}>
-			<AppBar style={{ background: '#171717' }} position='static' color='default'>
+			<AppBar position='static' color='default'>
 				<Tabs
+					style={{ background: '#171717' }}
 					value={value}
 					onChange={handleChange}
 					indicatorColor='primary'
@@ -113,13 +124,14 @@ const PopupTabs: React.FC = () => {
 					scrollButtons='on'>
 					{Object.keys(popupSchema).map(key => (
 						<Tab
+							key={key}
 							label={
 								<div
 									style={{
 										display: 'flex',
 										flexDirection: 'row',
 										color: '#fff',
-										fontSize: 18,
+										fontSize: 16,
 									}}>
 									<div style={{ height: 20, width: 20, paddingRight: 10 }}>
 										{typeof icons[key as keyof typeof icons] === 'string' ? (
@@ -145,15 +157,22 @@ const PopupTabs: React.FC = () => {
 			{Object.values(popupSchema).map((options, index) => {
 				return (
 					<Paper
-						style={{ background: '#171717', paddingTop: 10 }}
+						key={index}
+						className={classes.scrollableSettings}
+						style={{ paddingTop: 10 }}
 						role='tabpanel'
 						hidden={value !== index}>
 						{value === index && (
-							<Grid container direction='column' spacing={2} style={{ padding: 15 }}>
+							<Grid
+								container
+								direction='column'
+								spacing={2}
+								style={{ padding: '10px 25px' }}>
 								{Object.entries(options).map(([optionTitle, optionSettings]: any) => {
 									const optionKey = optionTitle as keyof typeof popupPage;
 									const optionValue = popupPage[optionKey];
-									if (typeof optionValue === 'boolean')
+									const optionType = optionSettings.type || 'boolean';
+									if (optionType === 'boolean')
 										return (
 											<Grid item>
 												<FormControlLabel
@@ -161,9 +180,13 @@ const PopupTabs: React.FC = () => {
 														<Switch
 															size='small'
 															key={optionKey}
-															checked={optionValue}
+															checked={optionValue as boolean}
 															onChange={e =>
-																changeData('popupPage', optionKey, e.target.checked)
+																changeData({
+																	parentKey: 'popupPage',
+																	childKey: optionKey,
+																	newValue: e.target.checked,
+																})
 															}
 														/>
 													}
@@ -172,8 +195,7 @@ const PopupTabs: React.FC = () => {
 											</Grid>
 										);
 									if (
-										(typeof optionValue === 'string' ||
-											typeof optionValue === 'number') &&
+										(optionType === 'string' || optionType === 'number') &&
 										optionSettings.display
 									) {
 										return (
@@ -183,14 +205,14 @@ const PopupTabs: React.FC = () => {
 													key={optionKey}
 													label={optionSettings.title}
 													value={optionValue}
-													type={typeof optionValue}
+													type={optionType}
 													onChange={e =>
 														changeData({
 															parentKey: 'popupPage',
 															childKey: optionKey,
 															newValue:
-																typeof optionValue === 'number'
-																	? parseInt(e.target.value) || 0
+																optionType === 'number'
+																	? Math.abs(parseInt(e.target.value)) || 1
 																	: e.target.value,
 														})
 													}

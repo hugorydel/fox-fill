@@ -14,10 +14,20 @@ const theme = createTheme({
 		].join(','),
 		button: { fontWeight: 500, textTransform: 'none' },
 	},
+	breakpoints: {
+		values: {
+			xs: 0,
+			sm: 700,
+			md: 820,
+			lg: 1280,
+			xl: 1920,
+		},
+	},
 	palette: {
 		type: 'dark',
 		background: {
-			paper: '#222',
+			paper: '#171717',
+			default: '#171717',
 		},
 		divider: '#1b1b1b',
 		primary: { main: '#FF993B' },
@@ -30,12 +40,10 @@ const theme = createTheme({
 			},
 		},
 		MuiOutlinedInput: {
-			notchedOutline: { borderColor: '#303030' },
+			notchedOutline: { borderColor: '#222' },
 			root: {
 				fontSize: 14,
 				fontWeight: 400,
-				background: '#171717',
-				// borderColor: '#202020',
 			},
 		},
 	},

@@ -81,25 +81,28 @@ export type ContextProps = {
 		memberSince: string;
 		activationKey: string;
 	};
-	changeData: (
-		parentKey: keyof ContextProps,
-		childKey:
+	changeData: (payload: {
+		parentKey: keyof ContextProps;
+		childKey?:
 			| keyof ContextProps['popupPage']
 			| keyof ContextProps['profilesPage']
-			| keyof ContextProps['settingsPage'],
-		newValue: any
-	) => void;
-	// loadStorageData: () => Promise<void>;
+			| keyof ContextProps['settingsPage']
+			| keyof ContextProps['user'];
+		newValue: any;
+	}) => void;
+	setStorageData: (payload: { parentKey: keyof ContextProps; newValue: any }) => void;
+	loadStorageData: () => Promise<void>;
 };
 
 export type ActionProps = {
 	type: 'SET_DATA';
 	payload: {
-		parentKey?: keyof ContextProps;
+		parentKey: keyof ContextProps;
 		childKey?:
 			| keyof ContextProps['popupPage']
 			| keyof ContextProps['profilesPage']
-			| keyof ContextProps['settingsPage'];
+			| keyof ContextProps['settingsPage']
+			| keyof ContextProps['user'];
 		newValue: any;
 	};
 };

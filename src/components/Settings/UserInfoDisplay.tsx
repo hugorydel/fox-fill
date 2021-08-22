@@ -29,6 +29,8 @@ const UserInfoDisplay: React.FC<UserInfoDisplayProps> = () => {
 	const { user } = useSettings();
 	const [licenseKeyVisible, setLicenseKeyVisible] = useState(false);
 
+	console.log(user);
+
 	return (
 		<Paper elevation={2}>
 			<Grid
@@ -57,7 +59,9 @@ const UserInfoDisplay: React.FC<UserInfoDisplayProps> = () => {
 					labelPlacement='start'
 					control={
 						<div style={{ marginLeft: 50, color: '#FF993B', fontSize: '1rem' }}>
-							{licenseKeyVisible ? user.activationKey : '•••• •••• •••• ••••'}
+							{licenseKeyVisible
+								? user.activationKey.match(/.{1,4}/g)?.join('-')
+								: '•••• •••• •••• ••••'}
 						</div>
 					}
 					label={<div style={{ fontSize: 12 }}>License Key</div>}

@@ -150,8 +150,7 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 
 	return (
 		<Dialog
-			PaperProps={{ style: { background: '#171717' } }}
-			maxWidth='md'
+			maxWidth='sm'
 			open={open}
 			onClose={() => setModalOpen(false)}
 			aria-labelledby='simple-modal-title'
@@ -161,14 +160,18 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 				validate={validate}
 				onSubmit={values => {
 					editType
-						? changeData(
-								'profilesPage',
-								'createdProfiles',
-								createdProfiles.map(profile =>
+						? changeData({
+								parentKey: 'profilesPage',
+								childKey: 'createdProfiles',
+								newValue: createdProfiles.map(profile =>
 									profile.id === values.id ? values : profile
-								)
-						  )
-						: changeData('profilesPage', 'createdProfiles', [...createdProfiles, values]);
+								),
+						  })
+						: changeData({
+								parentKey: 'profilesPage',
+								childKey: 'createdProfiles',
+								newValue: [...createdProfiles, values],
+						  });
 				}}>
 				{({
 					submitForm,
@@ -255,7 +258,7 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 								}}
 								color='primary'
 								variant='contained'>
-								{editType ? 'Edit' : 'Create'} Profile
+								{editType ? 'Save' : 'Create'} Profile
 							</Button>
 						</DialogActions>
 					</>

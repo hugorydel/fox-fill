@@ -5,23 +5,24 @@ const ProfileSelect: React.FC = () => {
 	const { profilesPage, changeData } = useSettings();
 	const { createdProfiles, currentProfile } = profilesPage;
 	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-		changeData(
-			'profilesPage',
-			'currentProfile',
-			createdProfiles.filter(item => item.id === event.target.value)[0]
-		);
+		changeData({
+			parentKey: 'profilesPage',
+			childKey: 'currentProfile',
+			newValue: createdProfiles.filter(item => item.id === event.target.value)[0],
+		});
 	};
 
 	return (
-		<FormControl style={{ width: '200px', margin: 0 }}>
+		<FormControl fullWidth style={{ margin: 0 }}>
 			<Select
+				style={{ background: '#171717' }}
 				inputProps={{ 'aria-label': 'Without label' }}
 				labelId='select-profile-label'
 				variant='outlined'
 				id='select-profile'
-				value={currentProfile?.id || 'Select Profile'}
+				value={currentProfile?.id || 'Choose Profile'}
 				onChange={handleChange}>
-				<MenuItem value='Select Profile'>Choose Profile</MenuItem>
+				<MenuItem value='Choose Profile'>Choose Profile</MenuItem>
 				{createdProfiles.map(profile => (
 					<MenuItem key={profile.id} value={profile.id}>
 						{profile.shippingProfileTitle}

@@ -1,9 +1,9 @@
 import { Button, TextField, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import bigLogo from '../assets/images/big_logo.svg';
+import bigLogo from '../../assets/images/big_logo.svg';
 import InputMask from 'react-input-mask';
 import { useState } from 'react';
-import useSettings from '../providers/settings';
+import useSettings from '../../providers/settings';
 import { useHistory } from 'react-router';
 
 const useStyles = makeStyles(() => ({
@@ -39,10 +39,14 @@ const Login: React.FC = () => {
 	const [keyError, setKeyError] = useState(false);
 
 	const saveActivationKey = () => {
-		const unformattedActivationKey = activationKey.replace(/[_-]/g, '');
-		console.log(unformattedActivationKey.length);
-		if (unformattedActivationKey.length !== 16) return setKeyError(true);
-		changeData('user', 'activationKey', unformattedActivationKey);
+		const bareActivationKey = activationKey.replace(/[_-]/g, '');
+		console.log(bareActivationKey.length);
+		if (bareActivationKey.length !== 16) return setKeyError(true);
+		changeData({
+			parentKey: 'user',
+			childKey: 'activationKey',
+			newValue: bareActivationKey,
+		});
 		history.push('/popup');
 	};
 
@@ -70,7 +74,7 @@ const Login: React.FC = () => {
 							style: {
 								width: '400px',
 								minWidth: '200px',
-								fontSize: '26px',
+								fontSize: '25px',
 								fontWeight: 300,
 								textAlign: 'center',
 							},
@@ -82,7 +86,7 @@ const Login: React.FC = () => {
 			</InputMask>
 			<Button
 				onClick={saveActivationKey}
-				style={{ marginTop: '30px', width: 110, height: 45 }}
+				style={{ marginTop: '40px', width: 130, height: 45 }}
 				variant='contained'
 				color='primary'
 				size='large'>

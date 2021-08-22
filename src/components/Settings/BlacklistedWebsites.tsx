@@ -45,7 +45,7 @@ const BlacklistedWebsites: React.FC = () => {
 						onChange={e => setNewBlacklistedWebsite(e.target.value)}
 					/>
 				</Grid>
-				<Grid style={{ paddingLeft: matchesSmallView ? '10px' : '0' }} item xs={6} sm={2}>
+				<Grid style={{ paddingLeft: matchesSmallView ? '5px' : '0' }} item xs={6} sm={2}>
 					<Button
 						style={{
 							width: `100%`,
@@ -53,10 +53,11 @@ const BlacklistedWebsites: React.FC = () => {
 						}}
 						onClick={e => {
 							if (newBlacklistedWebsite) {
-								changeData('settingsPage', 'blackListedWebsites', [
-									newBlacklistedWebsite,
-									...settingsPage.blackListedWebsites,
-								]);
+								changeData({
+									parentKey: 'settingsPage',
+									childKey: 'blackListedWebsites',
+									newValue: [newBlacklistedWebsite, ...settingsPage.blackListedWebsites],
+								});
 								setNewBlacklistedWebsite('');
 							}
 						}}
@@ -80,11 +81,15 @@ const BlacklistedWebsites: React.FC = () => {
 							<div>{websiteTitle}</div>
 							<Button
 								onClick={() =>
-									changeData('settingsPage', 'blackListedWebsites', [
-										...settingsPage.blackListedWebsites.filter(
-											item => item !== websiteTitle
-										),
-									])
+									changeData({
+										parentKey: 'settingsPage',
+										childKey: 'blackListedWebsites',
+										newValue: [
+											...settingsPage.blackListedWebsites.filter(
+												item => item !== websiteTitle
+											),
+										],
+									})
 								}>
 								<DeleteIcon fontSize='small' />
 							</Button>

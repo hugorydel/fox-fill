@@ -1,4 +1,4 @@
-import { Grid, makeStyles, Paper, Theme } from '@material-ui/core';
+import { makeStyles, Paper, Theme, Typography } from '@material-ui/core';
 import useSettings from '../../providers/settings';
 import { Profile } from '../../providers/settings/types';
 import React from 'react';
@@ -7,8 +7,8 @@ import ProfileItemActions from './ProfileItemActions';
 
 const useStyles = makeStyles((theme: Theme) => ({
 	profileItem: {
-		background: '#171717',
-		height: 100,
+		marginTop: 8,
+		height: 75,
 		display: 'flex',
 		alignItems: 'center',
 		padding: '0 20px 0 20px',
@@ -40,14 +40,19 @@ const ProfileItemContainer: React.FC<ProfileItemContainerProps> = ({
 
 	return (
 		<Paper
-			variant='outlined'
-			onClick={() => changeData('profilesPage', 'currentProfile', profile)}
+			// variant='outlined'
+			onClick={() =>
+				changeData({
+					parentKey: 'profilesPage',
+					childKey: 'currentProfile',
+					newValue: profile,
+				})
+			}
 			className={`${classes.profileItem} ${
 				profile.id === currentProfile?.id ? classes.currentProfileItem : ''
 			}`}>
-			<Grid container>
-				<Grid item>{profile.shippingProfileTitle}</Grid>
-			</Grid>
+			<Typography style={{ fontSize: 16 }}>{profile.shippingProfileTitle}</Typography>
+
 			<ProfileItemActions profile={profile} openFormOfType={openFormOfType} />
 		</Paper>
 	);

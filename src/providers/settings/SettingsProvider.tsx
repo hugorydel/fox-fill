@@ -9,7 +9,7 @@ const SettingsProvider: React.FC = ({ children }) => {
 		popupPage: {
 			shopifyEnabled: false,
 			shopifyNavigateThroughStepsEnabled: false,
-			shopifyNavigateThroughStepsDelay: 0,
+			shopifyNavigateThroughStepsDelay: 1,
 			shopifyRequests: false,
 			shopifyAutocart: false,
 			shopifyShopifyAutocop: false,
@@ -86,28 +86,44 @@ const SettingsProvider: React.FC = ({ children }) => {
 			username: '#1111',
 			email: 'test@gmail.com',
 			memberSince: '2000/01/01',
-			activationKey: 'DEFA-ULT-ACTI-KEYS',
+			activationKey: '`',
 		},
-		changeData: (parentKey, childKey, newValue) => {
-			dispatch({ type: 'SET_DATA', payload: { parentKey, childKey, newValue } });
+		changeData: payload => {
+			dispatch({ type: 'SET_DATA', payload });
 		},
-		//Future -- fix this and if you chose to, change the setStorageData to how the data is currently structured
-		// loadStorageData: async () => {},
-		// 	const storageData: Object = await new Promise((resolve, reject) => {
-		// 		chrome.storage.sync.get('data', items => {
-		// 			if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
-		// 			resolve(items.data);
-		// 		});
-		// 	});
-		// 	initialState.setStorageData('data', initialState.data);
-		// 	if (!isEmpty(storageData)) dispatch({ type: 'LOAD_DATA', payload: storageData });
-		// },
+		setStorageData: ({ parentKey, newValue }) => {
+			console.log('set storage', { parentKey, newValue });
+			chrome.storage.sync.set({ [parentKey]: newValue });
+		},
+		loadStorageData: async () => {
+			const storageData: Object = await new Promise((resolve, reject) => {
+				chrome.storage.sync.get(null, items => {
+					if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
+					resolve(items.data);
+				});
+			});
+			console.log({ initialStorageData: storageData });
+
+			if (
+				storageData &&
+				Object.keys(storageData).length === 0 &&
+				storageData.constructor === Object
+			)
+				Object.entries(storageData).forEach(([parentKey, newValue]) => {
+					console.log('get storage', { [parentKey]: newValue });
+					initialState.changeData({
+						parentKey: parentKey as keyof ContextProps,
+						newValue,
+					});
+				});
+		},
 	};
 
 	const [state, dispatch] = useReducer(reducer, initialState);
 
 	useEffect(() => {
-		// state.loadStorageData();
+		state.loadStorageData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return <Context.Provider value={state}>{children}</Context.Provider>;

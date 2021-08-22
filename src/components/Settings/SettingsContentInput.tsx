@@ -69,11 +69,11 @@ const SettingsContentInput: React.FC<SettingsContentInputProps> = ({
 					placeholder={settings.placeholder}
 					value={settingsPage[itemName as keyof typeof settingsPage]}
 					onChange={e =>
-						changeData(
-							'settingsPage',
-							itemName as keyof typeof settingsPage,
-							e.target.value
-						)
+						changeData({
+							parentKey: 'settingsPage',
+							childKey: itemName as keyof typeof settingsPage,
+							newValue: e.target.value,
+						})
 					}
 				/>
 			</Grid>

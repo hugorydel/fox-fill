@@ -49,23 +49,21 @@ const ProfilesContent: React.FC = () => {
 						onClick={() => openFormOfType('create')}
 						variant='contained'
 						color='primary'>
-						+ Create New Profile
+						+ Create Profile
 					</Button>
 				</Grid>
-				<Grid xs={12} item>
-					{createdProfiles
-						.filter(item =>
-							item.shippingProfileTitle.toLowerCase().includes(query.toLowerCase())
-						)
-						.map(profile => (
-							<ProfileItemContainer
-								key={profile.id}
-								profile={profile}
-								openFormOfType={openFormOfType}
-							/>
-						))}
-				</Grid>
 			</Grid>
+			{createdProfiles
+				.filter(item =>
+					item.shippingProfileTitle.toLowerCase().includes(query.toLowerCase())
+				)
+				.map(profile => (
+					<ProfileItemContainer
+						key={profile.id}
+						profile={profile}
+						openFormOfType={openFormOfType}
+					/>
+				))}
 		</Fragment>
 	);
 };

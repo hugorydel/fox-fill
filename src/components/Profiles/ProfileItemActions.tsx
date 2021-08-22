@@ -19,11 +19,11 @@ interface ProfileItemActionsProps {
 	openFormOfType: (input: 'create' | 'edit') => void;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-	popoverContent: {
-		padding: theme.spacing(2),
-	},
-}));
+// const useStyles = makeStyles((theme: Theme) => ({
+// 	popoverContent: {
+// 		padding: theme.spacing(2),
+// 	},
+// }));
 
 const ProfileItemActions: React.FC<ProfileItemActionsProps> = ({
 	openFormOfType,
@@ -31,7 +31,7 @@ const ProfileItemActions: React.FC<ProfileItemActionsProps> = ({
 }) => {
 	const [open, setOpen] = useState(false);
 	const anchorRef = useRef<HTMLButtonElement>(null);
-	const classes = useStyles();
+	// const classes = useStyles();
 
 	const { profilesPage, changeData } = useSettings();
 	const { createdProfiles, currentProfile } = profilesPage;
@@ -50,12 +50,16 @@ const ProfileItemActions: React.FC<ProfileItemActionsProps> = ({
 	};
 
 	const handleDelete = () => {
-		changeData('profilesPage', 'currentProfile', undefined);
-		changeData(
-			'profilesPage',
-			'createdProfiles',
-			createdProfiles.filter(savedProfile => savedProfile.id !== profile.id)
-		);
+		changeData({
+			parentKey: 'profilesPage',
+			childKey: 'currentProfile',
+			newValue: undefined,
+		});
+		changeData({
+			parentKey: 'profilesPage',
+			childKey: 'createdProfiles',
+			newValue: createdProfiles.filter(savedProfile => savedProfile.id !== profile.id),
+		});
 	};
 
 	function handleListKeyDown(event: React.KeyboardEvent) {
@@ -72,16 +76,17 @@ const ProfileItemActions: React.FC<ProfileItemActionsProps> = ({
 		prevOpen.current = open;
 	}, [open]);
 
-	return currentProfile?.id === profile.id ? (
+	return (
 		<>
 			<IconButton
 				ref={anchorRef}
 				aria-controls={open ? 'menu-list-grow' : undefined}
 				aria-haspopup='true'
 				onClick={handleToggle}>
-				<MoreVertIcon />
+				<MoreVertIcon fontSize='small' />
 			</IconButton>
 			<Popper
+				style={{ zIndex: 1000 }}
 				open={open}
 				anchorEl={anchorRef.current}
 				role={undefined}
@@ -108,8 +113,6 @@ const ProfileItemActions: React.FC<ProfileItemActionsProps> = ({
 				)}
 			</Popper>
 		</>
-	) : (
-		<Fragment></Fragment>
 	);
 };
 
