@@ -16,7 +16,6 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import React, { ChangeEvent, useState } from 'react';
 import useSettings from '../../providers/settings';
-import { ContextProps } from '../../providers/settings/types';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const useStyles = makeStyles({
@@ -50,7 +49,8 @@ const icons = {
 };
 
 const PopupTabs: React.FC = () => {
-	const { popupPage, changeData } = useSettings();
+	const { data, setData } = useSettings();
+	const { popupPage } = data;
 	const [value, setValue] = useState(0);
 	const classes = useStyles();
 
@@ -171,8 +171,8 @@ const PopupTabs: React.FC = () => {
 								{Object.entries(options).map(([optionTitle, optionSettings]: any) => {
 									const optionKey = optionTitle as keyof typeof popupPage;
 									const optionValue = popupPage[optionKey];
-									const optionType = optionSettings.type || 'boolean';
-									if (optionType === 'boolean')
+									const optionType = optionSettings.type;
+									if (typeof optionValue === 'boolean')
 										return (
 											<Grid item>
 												<FormControlLabel
@@ -180,9 +180,9 @@ const PopupTabs: React.FC = () => {
 														<Switch
 															size='small'
 															key={optionKey}
-															checked={optionValue as boolean}
+															checked={optionValue}
 															onChange={e =>
-																changeData({
+																setData({
 																	parentKey: 'popupPage',
 																	childKey: optionKey,
 																	newValue: e.target.checked,
@@ -207,7 +207,7 @@ const PopupTabs: React.FC = () => {
 													value={optionValue}
 													type={optionType}
 													onChange={e =>
-														changeData({
+														setData({
 															parentKey: 'popupPage',
 															childKey: optionKey,
 															newValue:

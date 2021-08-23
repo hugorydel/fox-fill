@@ -22,7 +22,8 @@ const useStyles = makeStyles({
 });
 
 const BlacklistedWebsites: React.FC = () => {
-	const { settingsPage, changeData } = useSettings();
+	const { data, setData } = useSettings();
+	const { settingsPage } = data;
 	const classes = useStyles();
 	const theme = useTheme();
 
@@ -53,7 +54,7 @@ const BlacklistedWebsites: React.FC = () => {
 						}}
 						onClick={e => {
 							if (newBlacklistedWebsite) {
-								changeData({
+								setData({
 									parentKey: 'settingsPage',
 									childKey: 'blackListedWebsites',
 									newValue: [newBlacklistedWebsite, ...settingsPage.blackListedWebsites],
@@ -81,7 +82,7 @@ const BlacklistedWebsites: React.FC = () => {
 							<div>{websiteTitle}</div>
 							<Button
 								onClick={() =>
-									changeData({
+									setData({
 										parentKey: 'settingsPage',
 										childKey: 'blackListedWebsites',
 										newValue: [

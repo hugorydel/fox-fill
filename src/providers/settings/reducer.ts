@@ -4,24 +4,21 @@ const reducer = (state: ContextProps, action: ActionProps) => {
 	const { type, payload } = action;
 	switch (type) {
 		case 'SET_DATA':
-			if ('parentKey' in payload && 'childKey' in payload) {
+			if (payload.parentKey && payload.childKey) {
 				const { parentKey, childKey, newValue } = payload;
-				const modifiedState = {
-					...state,
-					[parentKey]: { ...state[parentKey], [childKey as any]: newValue },
+				const modifiedData = {
+					...state.data,
+					[parentKey]: { ...state.data[parentKey], [childKey]: newValue },
 				};
-				state.setStorageData({
-					parentKey,
-					newValue: { ...state[parentKey], [childKey as any]: newValue },
-				});
-				return modifiedState;
-			}
-			if ('parentKey' in payload) {
-				const { parentKey, newValue } = payload;
-				state.setStorageData({ parentKey, newValue });
-				return state;
+				const modifiedContext = { ...state, data: { ...modifiedData } };
+				chrome.storage.sync.set({ data: modifiedData });
+				return modifiedContext;
 			}
 			return state;
+		case 'LOAD_STORAGE_DATA':
+			const { data, ...other } = state;
+			const modifiedState = { data: { ...payload.newValue }, ...other };
+			return modifiedState;
 	}
 };
 

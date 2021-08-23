@@ -26,10 +26,9 @@ const InfoDisplayItem: React.FC<InfoDisplayItemProps> = ({ title, dataToDisplay 
 interface UserInfoDisplayProps {}
 
 const UserInfoDisplay: React.FC<UserInfoDisplayProps> = () => {
-	const { user } = useSettings();
+	const { data } = useSettings();
+	const { user } = data;
 	const [licenseKeyVisible, setLicenseKeyVisible] = useState(false);
-
-	console.log(user);
 
 	return (
 		<Paper elevation={2}>

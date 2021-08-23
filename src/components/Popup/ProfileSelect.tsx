@@ -2,10 +2,11 @@ import { FormControl, MenuItem, Select } from '@material-ui/core';
 import useSettings from '../../providers/settings';
 
 const ProfileSelect: React.FC = () => {
-	const { profilesPage, changeData } = useSettings();
+	const { data, setData } = useSettings();
+	const { profilesPage } = data;
 	const { createdProfiles, currentProfile } = profilesPage;
 	const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-		changeData({
+		setData({
 			parentKey: 'profilesPage',
 			childKey: 'currentProfile',
 			newValue: createdProfiles.filter(item => item.id === event.target.value)[0],

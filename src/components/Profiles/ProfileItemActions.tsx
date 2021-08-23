@@ -33,8 +33,9 @@ const ProfileItemActions: React.FC<ProfileItemActionsProps> = ({
 	const anchorRef = useRef<HTMLButtonElement>(null);
 	// const classes = useStyles();
 
-	const { profilesPage, changeData } = useSettings();
-	const { createdProfiles, currentProfile } = profilesPage;
+	const { data, setData } = useSettings();
+	const { profilesPage } = data;
+	const { createdProfiles } = profilesPage;
 
 	const handleToggle = () => setOpen(prevOpen => !prevOpen);
 
@@ -50,12 +51,12 @@ const ProfileItemActions: React.FC<ProfileItemActionsProps> = ({
 	};
 
 	const handleDelete = () => {
-		changeData({
+		setData({
 			parentKey: 'profilesPage',
 			childKey: 'currentProfile',
 			newValue: undefined,
 		});
-		changeData({
+		setData({
 			parentKey: 'profilesPage',
 			childKey: 'createdProfiles',
 			newValue: createdProfiles.filter(savedProfile => savedProfile.id !== profile.id),

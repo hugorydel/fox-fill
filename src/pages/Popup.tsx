@@ -19,15 +19,14 @@ const useStyles = makeStyles({
 });
 
 const Popup = () => {
-	const { user } = useSettings();
+	const { data } = useSettings();
+	const { user } = data;
 	const { activationKey } = user;
 	const classes = useStyles();
 
 	const goToSettings = (_event: ChangeEvent<{}>) => {
 		window.open(`${window.location.href.split('#')[0]}#/profiles`);
 	};
-
-	console.log(activationKey);
 
 	return activationKey ? (
 		<div className={classes.popupRoot}>

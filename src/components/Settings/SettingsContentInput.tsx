@@ -36,7 +36,8 @@ const SettingsContentInput: React.FC<SettingsContentInputProps> = ({
 	settings,
 	itemName,
 }) => {
-	const { settingsPage, changeData } = useSettings();
+	const { data, setData } = useSettings();
+	const { settingsPage } = data;
 	const theme = useTheme();
 
 	const matchesSmallView = useMediaQuery(theme.breakpoints.up('sm'));
@@ -69,7 +70,7 @@ const SettingsContentInput: React.FC<SettingsContentInputProps> = ({
 					placeholder={settings.placeholder}
 					value={settingsPage[itemName as keyof typeof settingsPage]}
 					onChange={e =>
-						changeData({
+						setData({
 							parentKey: 'settingsPage',
 							childKey: itemName as keyof typeof settingsPage,
 							newValue: e.target.value,

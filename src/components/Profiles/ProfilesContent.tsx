@@ -15,7 +15,8 @@ const useStyles = makeStyles(() => ({
 const ProfilesContent: React.FC = () => {
 	const classes = useStyles();
 
-	const { profilesPage } = useSettings();
+	const { data } = useSettings();
+	const { profilesPage } = data;
 	const { createdProfiles } = profilesPage;
 
 	const [query, setQuery] = useState('');

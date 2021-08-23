@@ -29,80 +29,81 @@ export type Profile = {
 };
 
 export type ContextProps = {
-	popupPage: {
-		shopifyEnabled: boolean;
-		shopifyNavigateThroughStepsEnabled: boolean;
-		shopifyNavigateThroughStepsDelay: number;
-		shopifyRequests: boolean;
-		shopifyAutocart: boolean;
-		shopifyShopifyAutocop: boolean;
-		shopifyHybrid: boolean;
-		shopifyProductMenu: boolean;
-		stripeEnabled: boolean;
-		stripeRefreshPageUntilClickEnabled: boolean;
-		stripeRefreshPageUntilClickURL: string;
-		stripeACO: boolean;
-		supremeEnabled: boolean;
-		supremeAutocop: boolean;
-		supremeProcessPayment: boolean;
-		supremeProductMenu: boolean;
-		walmartACO: boolean;
-		walmartATC: boolean;
-		targetACO: boolean;
-		targetATC: boolean;
-		targetAllowPickup: boolean;
-		AIOScriptsAdidasYeezySupply: boolean;
-		AIOScriptsOffWhite: boolean;
-		AIOScriptsFootsites: boolean;
-		botsBandarsBounties: boolean;
-		botsShrey: boolean;
-		botsVelo: boolean;
-		botsDiscordOAuth: boolean;
+	data: {
+		popupPage: {
+			shopifyEnabled: boolean;
+			shopifyNavigateThroughStepsEnabled: boolean;
+			shopifyNavigateThroughStepsDelay: number;
+			shopifyRequests: boolean;
+			shopifyAutocart: boolean;
+			shopifyShopifyAutocop: boolean;
+			shopifyHybrid: boolean;
+			shopifyProductMenu: boolean;
+			stripeEnabled: boolean;
+			stripeRefreshPageUntilClickEnabled: boolean;
+			stripeRefreshPageUntilClickURL: string;
+			stripeACO: boolean;
+			supremeEnabled: boolean;
+			supremeAutocop: boolean;
+			supremeProcessPayment: boolean;
+			supremeProductMenu: boolean;
+			walmartACO: boolean;
+			walmartATC: boolean;
+			targetACO: boolean;
+			targetATC: boolean;
+			targetAllowPickup: boolean;
+			AIOScriptsAdidasYeezySupply: boolean;
+			AIOScriptsOffWhite: boolean;
+			AIOScriptsFootsites: boolean;
+			botsBandarsBounties: boolean;
+			botsShrey: boolean;
+			botsVelo: boolean;
+			botsDiscordOAuth: boolean;
+		};
+		profilesPage: {
+			createdProfiles: Array<Profile>;
+			currentProfile: Profile | undefined;
+		};
+		settingsPage: {
+			discordWebhook: string;
+			supremeMonitorkeywords: string;
+			supremeMonitorcolor: string;
+			supremeMonitorsize: number;
+			shopifyMonitorkeywords: string;
+			shopifyMonitorcolor: string;
+			shopifyMonitorsize: number;
+			promoDiscountCode: string;
+			linkAppender: string;
+			blackListedWebsites: Array<string>;
+		};
+		user: {
+			username: string;
+			email: string;
+			memberSince: string;
+			activationKey: string;
+		};
 	};
-	profilesPage: {
-		createdProfiles: Array<Profile>;
-		currentProfile: Profile | undefined;
-	};
-	settingsPage: {
-		discordWebhook: string;
-		supremeMonitorkeywords: string;
-		supremeMonitorcolor: string;
-		supremeMonitorsize: number;
-		shopifyMonitorkeywords: string;
-		shopifyMonitorcolor: string;
-		shopifyMonitorsize: number;
-		promoDiscountCode: string;
-		linkAppender: string;
-		blackListedWebsites: Array<string>;
-	};
-	user: {
-		username: string;
-		email: string;
-		memberSince: string;
-		activationKey: string;
-	};
-	changeData: (payload: {
-		parentKey: keyof ContextProps;
+	setData: (payload: {
+		parentKey: keyof ContextProps['data'];
 		childKey?:
-			| keyof ContextProps['popupPage']
-			| keyof ContextProps['profilesPage']
-			| keyof ContextProps['settingsPage']
-			| keyof ContextProps['user'];
+			| keyof ContextProps['data']['popupPage']
+			| keyof ContextProps['data']['profilesPage']
+			| keyof ContextProps['data']['settingsPage']
+			| keyof ContextProps['data']['user'];
 		newValue: any;
 	}) => void;
-	setStorageData: (payload: { parentKey: keyof ContextProps; newValue: any }) => void;
 	loadStorageData: () => Promise<void>;
 };
 
 export type ActionProps = {
-	type: 'SET_DATA';
+	type: 'SET_DATA' | 'LOAD_STORAGE_DATA';
 	payload: {
-		parentKey: keyof ContextProps;
+		parentKey?: keyof ContextProps['data'];
 		childKey?:
-			| keyof ContextProps['popupPage']
-			| keyof ContextProps['profilesPage']
-			| keyof ContextProps['settingsPage']
-			| keyof ContextProps['user'];
+			| keyof ContextProps['data']['popupPage']
+			| keyof ContextProps['data']['profilesPage']
+			| keyof ContextProps['data']['settingsPage']
+			| keyof ContextProps['data']['user'];
 		newValue: any;
 	};
 };

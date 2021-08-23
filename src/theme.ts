@@ -14,15 +14,6 @@ const theme = createTheme({
 		].join(','),
 		button: { fontWeight: 500, textTransform: 'none' },
 	},
-	breakpoints: {
-		values: {
-			xs: 0,
-			sm: 700,
-			md: 820,
-			lg: 1280,
-			xl: 1920,
-		},
-	},
 	palette: {
 		type: 'dark',
 		background: {

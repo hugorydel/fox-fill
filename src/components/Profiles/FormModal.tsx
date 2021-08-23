@@ -49,7 +49,7 @@ const shippingSchema = {
 		autoComplete: 'cc-exp',
 	},
 	shippingAddressOne: { title: 'Address One', placeholder: 'Enter Address 1' },
-	shippingAddressTwo: { title: 'Expiration Two', placeholder: 'Enter Address 2' },
+	shippingAddressTwo: { title: 'Address Two', placeholder: 'Enter Address 2' },
 	shippingCountry: { title: 'Country', placeholder: 'Enter Country' },
 	shippingState: { title: 'State', placeholder: 'Enter State/Province' },
 	shippingPhoneNumber: {
@@ -101,7 +101,8 @@ interface FormModalProps {
 }
 
 const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
-	const { profilesPage, changeData } = useSettings();
+	const { data, setData } = useSettings();
+	const { profilesPage } = data;
 	const { currentProfile, createdProfiles } = profilesPage;
 	const classes = useStyles();
 
@@ -150,7 +151,7 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 
 	return (
 		<Dialog
-			maxWidth='sm'
+			maxWidth='md'
 			open={open}
 			onClose={() => setModalOpen(false)}
 			aria-labelledby='simple-modal-title'
@@ -160,14 +161,14 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 				validate={validate}
 				onSubmit={values => {
 					editType
-						? changeData({
+						? setData({
 								parentKey: 'profilesPage',
 								childKey: 'createdProfiles',
 								newValue: createdProfiles.map(profile =>
 									profile.id === values.id ? values : profile
 								),
 						  })
-						: changeData({
+						: setData({
 								parentKey: 'profilesPage',
 								childKey: 'createdProfiles',
 								newValue: [...createdProfiles, values],

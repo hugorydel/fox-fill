@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Login: React.FC = () => {
-	const { changeData } = useSettings();
+	const { setData } = useSettings();
 	const classes = useStyles();
 	const history = useHistory();
 
@@ -40,9 +40,8 @@ const Login: React.FC = () => {
 
 	const saveActivationKey = () => {
 		const bareActivationKey = activationKey.replace(/[_-]/g, '');
-		console.log(bareActivationKey.length);
 		if (bareActivationKey.length !== 16) return setKeyError(true);
-		changeData({
+		setData({
 			parentKey: 'user',
 			childKey: 'activationKey',
 			newValue: bareActivationKey,

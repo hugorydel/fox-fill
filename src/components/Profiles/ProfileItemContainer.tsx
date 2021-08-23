@@ -35,14 +35,15 @@ const ProfileItemContainer: React.FC<ProfileItemContainerProps> = ({
 }) => {
 	const classes = useStyles();
 
-	const { profilesPage, changeData } = useSettings();
+	const { data, setData } = useSettings();
+	const { profilesPage } = data;
 	const { currentProfile } = profilesPage;
 
 	return (
 		<Paper
 			// variant='outlined'
 			onClick={() =>
-				changeData({
+				setData({
 					parentKey: 'profilesPage',
 					childKey: 'currentProfile',
 					newValue: profile,
