@@ -13,6 +13,18 @@ const theme = createTheme({
 			'"Segoe UI Symbol"',
 		].join(','),
 		button: { fontWeight: 500, textTransform: 'none' },
+		fontSize: 12,
+		h5: { fontSize: 20 },
+		h6: { fontSize: 15 },
+	},
+	breakpoints: {
+		values: {
+			xs: 0,
+			sm: 600,
+			md: 880,
+			lg: 1280,
+			xl: 1920,
+		},
 	},
 	palette: {
 		type: 'dark',

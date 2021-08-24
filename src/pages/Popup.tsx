@@ -9,12 +9,19 @@ import Login from '../components/Login/Login';
 
 const useStyles = makeStyles({
 	popupRoot: {
-		width: '600px',
-		height: '600px',
+		width: '560px',
+		height: '560px',
 	},
 	content: {
 		padding: '30px 40px 0px 40px',
-		maxHeight: '500px',
+		// height: '1550px',
+	},
+	settingsButton: {
+		background: '#171717',
+		borderRadius: 3,
+		border: '1px solid #232323',
+		fontSize: 13,
+		height: '100%',
 	},
 });
 
@@ -42,13 +49,7 @@ const Popup = () => {
 					</Grid>
 					<Grid xs={3} sm={3} item>
 						<Button
-							style={{
-								background: '#171717',
-								borderRadius: 3,
-								border: '1px solid #232323',
-								fontSize: 13,
-								height: '100%',
-							}}
+							className={classes.settingsButton}
 							variant='outlined'
 							fullWidth
 							onClick={goToSettings}>

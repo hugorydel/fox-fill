@@ -91,6 +91,17 @@ const useStyles = makeStyles(() =>
 			'&::-webkit-scrollbar-thumb': { background: '#444' } /* Handle */,
 			'&::-webkit-scrollbar-thumb:hover': { background: '#383838' } /* Handle on hover */,
 		},
+		paper: { maxWidth: '760px' },
+		formModalTitle: {
+			color: '#FF993B',
+			fontSize: 30,
+			fontWeight: 600,
+		},
+		contentTitleStyle: {
+			paddingBottom: 8,
+			paddingTop: 16,
+			fontWeight: 600,
+		},
 	})
 );
 
@@ -151,7 +162,8 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 
 	return (
 		<Dialog
-			maxWidth='md'
+			fullWidth
+			classes={{ paper: classes.paper }}
 			open={open}
 			onClose={() => setModalOpen(false)}
 			aria-labelledby='simple-modal-title'
@@ -183,18 +195,16 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 				}: FormikProps<Profile>) => (
 					<>
 						<DialogTitle>
-							<Typography
-								style={{ color: '#FF993B', fontSize: 30, fontWeight: 600 }}
-								variant='h5'>
+							<Typography className={classes.formModalTitle} variant='h5'>
 								{editType ? 'Edit' : 'Create'} Profile
 							</Typography>
 						</DialogTitle>
 						<DialogContent className={classes.modalRoot}>
 							<Form>
-								<Typography style={{ paddingBottom: 8, fontWeight: 600 }} variant='h5'>
+								<Typography className={classes.contentTitleStyle} variant='h5'>
 									Shipping
 								</Typography>
-								<Grid container justifyContent='space-between' spacing={2}>
+								<Grid container justifyContent='space-between' spacing={1}>
 									{Object.entries(shippingSchema).map(([key, settings]) => (
 										<FormModalInput key={key} itemName={key} settings={settings} />
 									))}
@@ -227,12 +237,10 @@ const FormModal: React.FC<FormModalProps> = ({ setModalOpen, open, type }) => {
 								/>
 								{!sameBillingAddress && (
 									<Fragment>
-										<Typography
-											style={{ paddingBottom: 8, paddingTop: 16, fontWeight: 600 }}
-											variant='h5'>
+										<Typography className={classes.contentTitleStyle} variant='h5'>
 											Billing
 										</Typography>
-										<Grid container>
+										<Grid container spacing={1}>
 											{Object.entries(billingSchema).map(([key, settings]) => (
 												<FormModalInput key={key} itemName={key} settings={settings} />
 											))}

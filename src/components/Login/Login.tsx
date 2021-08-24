@@ -12,21 +12,29 @@ const useStyles = makeStyles(() => ({
 		flexDirection: 'column',
 		alignItems: 'center',
 		justifyContent: 'center',
-		// justifyContent: 'row',
 		color: '#FF993B',
 		width: '600px',
 		height: '600px',
 		overflow: 'overlay',
-		'&::-webkit-scrollbar': { width: '10px' } /* width */,
-		'&::-webkit-scrollbar-track': { background: '#222' } /* Track */,
-		'&::-webkit-scrollbar-thumb': { background: '#444' } /* Handle */,
-		'&::-webkit-scrollbar-thumb:hover': { background: '#383838' } /* Handle on hover */,
+		'&::-webkit-scrollbar': { width: '10px' },
+		'&::-webkit-scrollbar-track': { background: '#222' },
+		'&::-webkit-scrollbar-thumb': { background: '#444' },
+		'&::-webkit-scrollbar-thumb:hover': { background: '#383838' },
+	},
+	foxFillTitle: {
+		color: '#fff',
+		marginBottom: '70px',
 	},
 	bigLogo: {
 		marginTop: '10px',
 		marginRight: '20px',
 		height: '120px',
 		width: '117px',
+	},
+	activationButton: {
+		marginTop: '40px',
+		width: 130,
+		height: 45,
 	},
 }));
 
@@ -52,7 +60,7 @@ const Login: React.FC = () => {
 	return (
 		<div className={classes.loginRoot}>
 			<img src={bigLogo} alt='Large Fox Fill Logo' className={classes.bigLogo} />
-			<Typography variant='h3' style={{ color: '#fff', marginBottom: '70px' }}>
+			<Typography variant='h3' className={classes.foxFillTitle}>
 				Fox <strong>Fill</strong>
 			</Typography>
 			<InputMask
@@ -85,7 +93,7 @@ const Login: React.FC = () => {
 			</InputMask>
 			<Button
 				onClick={saveActivationKey}
-				style={{ marginTop: '40px', width: 130, height: 45 }}
+				className={classes.activationButton}
 				variant='contained'
 				color='primary'
 				size='large'>

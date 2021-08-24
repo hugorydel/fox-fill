@@ -1,4 +1,4 @@
-import { Grid, TextField, Typography } from '@material-ui/core';
+import { Grid, GridSize, TextField, Typography, makeStyles } from '@material-ui/core';
 import { FastField, FastFieldProps } from 'formik';
 import { Fragment } from 'react';
 import InputMask from 'react-input-mask';
@@ -8,12 +8,17 @@ interface FormModalInputProps {
 	settings: any;
 }
 
+const useStyles = makeStyles(() => ({
+	inputTitle: { fontWeight: 400, paddingTop: 8, paddingBottom: 8 },
+	error: { color: '#F44336', fontSize: 13 },
+}));
+
 const FormModalInput: React.FC<FormModalInputProps> = ({ itemName, settings }) => {
+	const classes = useStyles();
+
 	return (
-		<Grid item xs={12} sm={settings.sm || 6}>
-			<Typography
-				variant='h6'
-				style={{ fontWeight: 400, paddingTop: 8, paddingBottom: 8 }}>
+		<Grid item xs={12} sm={(parseInt(settings.sm) as GridSize) || 6}>
+			<Typography variant='h6' className={classes.inputTitle}>
 				{settings.title}
 			</Typography>
 			<FastField name={itemName}>
@@ -50,7 +55,7 @@ const FormModalInput: React.FC<FormModalInputProps> = ({ itemName, settings }) =
 							/>
 						)}
 						{!!meta.touched && !!meta.error && (
-							<div style={{ color: '#F44336' }}>{meta.error}</div>
+							<div className={classes.error}>{meta.error}</div>
 						)}
 					</Fragment>
 				)}

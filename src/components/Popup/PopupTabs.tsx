@@ -1,7 +1,7 @@
 import { faShopify, faStripeS } from '@fortawesome/free-brands-svg-icons';
 import { faBullseye, faCode, faRobot } from '@fortawesome/free-solid-svg-icons';
-import supremeLogo from '../../assets/images/supreme-logo.png';
-import walmartLogo from '../../assets/images/walmart-logo.png';
+import { ReactComponent as Close } from '../../assets/images/supreme_icon.svg';
+import { ReactComponent as Logout } from '../../assets/images/walmart_icon.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	AppBar,
@@ -38,21 +38,21 @@ const useStyles = makeStyles({
 	},
 });
 
-const icons = {
-	Shopify: faShopify,
-	Stripe: faStripeS,
-	Supreme: supremeLogo,
-	Walmart: walmartLogo,
-	Target: faBullseye,
-	Scripts: faCode,
-	Bots: faRobot,
-};
-
 const PopupTabs: React.FC = () => {
 	const { data, setData } = useSettings();
 	const { popupPage } = data;
 	const [value, setValue] = useState(0);
 	const classes = useStyles();
+
+	const icons = {
+		Shopify: faShopify,
+		Stripe: faStripeS,
+		Supreme: <Close style={{ height: 24, width: 17, paddingTop: 5 }} />,
+		Walmart: <Logout style={{ height: 18, width: 18, paddingTop: 5 }} />,
+		Target: faBullseye,
+		Scripts: faCode,
+		Bots: faRobot,
+	};
 
 	const popupSchema = {
 		Shopify: {
@@ -126,20 +126,14 @@ const PopupTabs: React.FC = () => {
 						<Tab
 							key={key}
 							label={
-								<div
-									style={{
-										display: 'flex',
-										flexDirection: 'row',
-										color: '#fff',
-										fontSize: 16,
-									}}>
-									<div style={{ height: 20, width: 20, paddingRight: 10 }}>
-										{typeof icons[key as keyof typeof icons] === 'string' ? (
-											<img
-												style={{ height: 20 }}
-												src={icons[key as keyof typeof icons] as string}
-												alt='descriptive icon'
-											/>
+								<Grid
+									justifyContent='center'
+									alignItems='center'
+									container
+									style={{ fontSize: 16 }}>
+									<div style={{ paddingRight: 10 }}>
+										{React.isValidElement(icons[key as keyof typeof icons]) ? (
+											icons[key as keyof typeof icons]
 										) : (
 											<FontAwesomeIcon
 												icon={icons[key as keyof typeof icons] as IconProp}
@@ -147,7 +141,7 @@ const PopupTabs: React.FC = () => {
 										)}
 									</div>
 									{key}
-								</div>
+								</Grid>
 							}
 						/>
 					))}

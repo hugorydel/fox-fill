@@ -55,10 +55,10 @@ const SettingsContentInput: React.FC<SettingsContentInputProps> = ({
 			item
 			container
 			xs={12}
-			sm={settings.containerSize || 12}
+			sm={(parseInt(settings.containerSize) as GridSize) || 12}
 			spacing={settings.containerSize === 12 || !settings.containerSize ? 0 : 1}
 			alignItems='flex-end'>
-			<Grid item xs={12} sm={settings.textFieldSize || 12}>
+			<Grid item xs={12} sm={(parseInt(settings.textFieldSize) as GridSize) || 12}>
 				<Typography className={classes.labels} variant='h6'>
 					{settings.title}
 				</Typography>

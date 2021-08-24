@@ -52,7 +52,7 @@ const ProfileItemContainer: React.FC<ProfileItemContainerProps> = ({
 			className={`${classes.profileItem} ${
 				profile.id === currentProfile?.id ? classes.currentProfileItem : ''
 			}`}>
-			<Typography style={{ fontSize: 16 }}>{profile.shippingProfileTitle}</Typography>
+			<Typography variant='body1'>{profile.shippingProfileTitle}</Typography>
 
 			<ProfileItemActions profile={profile} openFormOfType={openFormOfType} />
 		</Paper>
