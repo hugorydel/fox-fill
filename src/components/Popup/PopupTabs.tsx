@@ -166,6 +166,7 @@ const PopupTabs: React.FC = () => {
 									const optionKey = optionTitle as keyof typeof popupPage;
 									const optionValue = popupPage[optionKey];
 									const optionType = optionSettings.type;
+									if (optionValue === undefined) return `Error, ${optionKey} Not Found`;
 									if (typeof optionValue === 'boolean')
 										return (
 											<Grid item>

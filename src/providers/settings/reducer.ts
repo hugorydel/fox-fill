@@ -11,7 +11,7 @@ const reducer = (state: ContextProps, action: ActionProps) => {
 					[parentKey]: { ...state.data[parentKey], [childKey]: newValue },
 				};
 				const modifiedContext = { ...state, data: { ...modifiedData } };
-				chrome.storage.sync.set({ data: modifiedData });
+				// chrome.storage.sync.set({ data: modifiedData });
 				return modifiedContext;
 			}
 			return state;

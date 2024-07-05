@@ -63,14 +63,14 @@ const SettingsProvider: React.FC = ({ children }) => {
 			dispatch({ type: 'SET_DATA', payload });
 		},
 		loadStorageData: async () => {
-			const storageData: Object = await new Promise((resolve, reject) => {
-				chrome.storage.sync.get(['data'], storage => {
-					if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
-					resolve(storage.data);
-				});
-			});
-			if (storageData && Object.keys(storageData).length > 0)
-				dispatch({ type: 'LOAD_STORAGE_DATA', payload: { newValue: storageData } });
+			// const storageData: Object = await new Promise((resolve, reject) => {
+			// 	chrome.storage.sync.get(['data'], storage => {
+			// 		if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
+			// 		resolve(storage.data);
+			// 	});
+			// });
+			// if (storageData && Object.keys(storageData).length > 0)
+			// 	dispatch({ type: 'LOAD_STORAGE_DATA', payload: { newValue: storageData } });
 		},
 	};
 
